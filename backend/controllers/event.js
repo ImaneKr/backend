@@ -13,9 +13,9 @@ const createEvent = async (req, res) => {
 
     // Create event in the database
     const event = await Event.create({
-      event_name,
-      event_desc,
-      event_date
+      event_name:event_name,
+      event_desc:event_date,
+      event_date:event_desc,
     });
 
     // Respond with the created event object
