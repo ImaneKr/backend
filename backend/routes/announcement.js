@@ -1,11 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const announcementController = require('../controllers/announcement');
+const { createAnnouncement, editAnnouncement, unpublishAnnouncement, getAllAnnouncements } = require('../controllers/announcement');
 
-// Create a new announcement (accessible only to admin and secretary)
-router.post('/', announcementController.createAnnouncement);
+router.post('/', createAnnouncement);
 
-// Get all announcements
-router.get('/', announcementController.getAllAnnouncements);
+router.put('/:announcement_id', editAnnouncement);
+
+router.put('/:announcement_id/unpublish', unpublishAnnouncement);
+
+router.get('/', getAllAnnouncements);
 
 module.exports = router;

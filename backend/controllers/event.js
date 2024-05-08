@@ -1,24 +1,21 @@
-const {Event,EventList} = require('../models/models');
+const { Event, EventList, Staff } = require('../models/models');
 
-
-// Controller function to create a new event
 const createEvent = async (req, res) => {
   try {
-    // Check if the user making the request is authorized (admin or secretary)
-    if (req.user.role !== 'admin' && req.user.role !== 'secretary') {
-      return res.status(403).json({ error: 'Unauthorized access' });
-    }
+    /* if (req.Staff.role !== 'admin' && req.Staff.role !== 'secretary') {
+       return res.status(403).json({ error: 'Unauthorized access' });
+     }*/
 
-    const { event_name, event_desc, event_date } = req.body;
+    const { event_name, event_desc, event_date, event_image } = req.body;
 
-    // Create event in the database
     const event = await Event.create({
-      event_name:event_name,
-      event_desc:event_date,
-      event_date:event_desc,
+      event_name: event_name,
+      event_desc: event_desc,
+      event_date: event_date,
+      event_image: event_image,
+      published: true // Set published to true
     });
 
-    // Respond with the created event object
     res.status(201).json(event);
   } catch (error) {
     console.error('Error creating event:', error);
@@ -26,13 +23,62 @@ const createEvent = async (req, res) => {
   }
 };
 
-// Controller function to get all events
+const editEvent = async (req, res) => {
+  try {
+    /*if (req.Staff.role !== 'admin' && req.Staff.role !== 'secretary') {
+      return res.status(403).json({ error: 'Unauthorized access' });
+    }*/
+
+    const { event_id, event_name, event_desc, event_date, event_image, published } = req.body;
+
+    let event = await Event.findByPk(event_id);
+
+    if (!event) {
+      return res.status(404).json({ error: 'Event not found' });
+    }
+
+    event.event_name = event_name;
+    event.event_desc = event_desc;
+    event.event_date = event_date;
+    event.event_image = event_image;
+    event.published = published;
+
+    await event.save();
+
+    res.status(200).json(event);
+  } catch (error) {
+    console.error('Error editing event:', error);
+    res.status(500).json({ error: 'Failed to edit event' });
+  }
+};
+
+const deleteEvent = async (req, res) => {
+  try {
+    /*if (req.Staff.role !== 'admin' && req.Staff.role !== 'secretary') {
+      return res.status(403).json({ error: 'Unauthorized access' });
+    }*/
+
+    const { event_id } = req.params;
+
+    const event = await Event.findByPk(event_id);
+
+    if (!event) {
+      return res.status(404).json({ error: 'Event not found' });
+    }
+
+    await event.destroy();
+
+    res.status(200).json({ message: 'Event deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting event:', error);
+    res.status(500).json({ error: 'Failed to delete event' });
+  }
+};
+
 const getAllEvents = async (req, res) => {
   try {
-    // Fetch all events from the database
     const events = await Event.findAll();
 
-    // Respond with the list of events
     res.status(200).json(events);
   } catch (error) {
     console.error('Error fetching events:', error);
@@ -40,25 +86,28 @@ const getAllEvents = async (req, res) => {
   }
 };
 
-// Controller function to create an event list entry
 const createEventListEntry = async (req, res) => {
   try {
-    // Check if the user making the request is authorized (admin or secretary)
-    if (req.user.role !== 'admin' && req.user.role !== 'secretary') {
-      return res.status(403).json({ error: 'Unauthorized access' });
-    }
+    /* if (req.Staff.role !== 'admin' && req.Staff.role !== 'secretary') {
+       return res.status(403).json({ error: 'Unauthorized access' });
+     }*/
 
     const { eventId } = req.params;
     const { accept, decline } = req.body;
 
-    // Create event list entry in the database
+    const kid = await Kid.findOne({ where: { guardian_id: userId } });
+
+    if (!kid) {
+      return res.status(404).json({ error: 'Kid not found for the user' });
+    }
+
     const eventListEntry = await EventList.create({
       event_id: eventId,
+      kid_id: kid.kid_id,
       accept,
       decline
     });
 
-    // Respond with the created event list entry
     res.status(201).json(eventListEntry);
   } catch (error) {
     console.error('Error creating event list entry:', error);
@@ -66,8 +115,11 @@ const createEventListEntry = async (req, res) => {
   }
 };
 
+
 module.exports = {
   createEvent,
+  editEvent,
+  deleteEvent,
   getAllEvents,
   createEventListEntry
 };

@@ -1,14 +1,22 @@
 const express = require('express');
 const router = express.Router();
-const eventController = require('../controllers/event');
+const {
+    createEvent,
+    editEvent,
+    deleteEvent,
+    getAllEvents,
+    createEventListEntry
+} = require('../controllers/event');
+const { verifyToken, verifyAdmin } = require('../middlewares/verifyToken');
 
-// Create a new event (accessible only to admin and secretary)
-router.post('/', eventController.createEvent);
+router.post('/', createEvent);
 
-// Get all events
-router.get('/', eventController.getAllEvents);
+router.put('/:event_id', editEvent);
 
-// Create an event list entry (accessible only to admin and secretary)
-router.post('/:eventId/event-list',  eventController.createEventListEntry);
+router.delete('/:event_id', deleteEvent);
+
+router.get('/', getAllEvents);
+
+router.post('/:eventId/list', createEventListEntry);
 
 module.exports = router;

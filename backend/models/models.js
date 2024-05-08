@@ -67,7 +67,7 @@ const Guardian = sequelize.define('Guardian', {
     type: DataTypes.STRING(200)
   },
   acc_pic: {
-    type: DataTypes.STRING(250)
+    type: DataTypes.BLOB
   },
   acc_active: {
     type: DataTypes.BOOLEAN,
@@ -113,7 +113,7 @@ const Kid = sequelize.define('Kid', {
     defaultValue: DataTypes.NOW
   },
   prof_pic: {
-    type: DataTypes.STRING(250)
+    type: DataTypes.BLOB
   },
   authorizedpickups: {
     type: DataTypes.JSON
@@ -168,7 +168,7 @@ const Staff = sequelize.define('Staff', {
     defaultValue: DataTypes.NOW
   },
   staff_pic: {
-    type: DataTypes.STRING(255),
+    type: DataTypes.BLOB,
     allowNull: false
   },
   phone_number: {
@@ -209,6 +209,13 @@ const Event = sequelize.define('Event', {
   event_date: {
     type: DataTypes.DATE,
     defaultValue: DataTypes.NOW
+  },
+  event_image: {
+    type: DataTypes.BLOB,
+    allowNull: false
+  },
+  published: {
+    type: DataTypes.BOOLEAN
   }
 }, {
   tableName: 'Event',
@@ -268,6 +275,13 @@ const Announcement = sequelize.define('Announcement', {
   announcement_date: {
     type: DataTypes.DATE,
     defaultValue: DataTypes.NOW
+  },
+  announcement_image: {
+    type: DataTypes.STRING(255),
+    allowNull: false
+  },
+  published: {
+    type: DataTypes.BOOLEAN
   }
 }, {
   timestamps: false,
@@ -433,25 +447,25 @@ const LunchMenu = sequelize.define('LunchMenu', {
     type: DataTypes.STRING(50)
   },
   item1_image_url: {
-    type: DataTypes.STRING(255)
+    type: DataTypes.BLOB
   },
   item2_name: {
     type: DataTypes.STRING(50)
   },
   item2_image_url: {
-    type: DataTypes.STRING(255)
+    type: DataTypes.BLOB
   },
   item3_name: {
     type: DataTypes.STRING(50)
   },
   item3_image_url: {
-    type: DataTypes.STRING(255)
+    type: DataTypes.BLOB
   },
   item4_name: {
     type: DataTypes.STRING(50)
   },
   item4_image_url: {
-    type: DataTypes.STRING(255)
+    type: DataTypes.BLOB
   }
 }, {
   tableName: 'LunchMenu',

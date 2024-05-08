@@ -1,7 +1,6 @@
 const { Guardian, Staff } = require('../models/models'); // Import the Guardian model
 const bcrypt = require("bcrypt");
 
-// Controller for creating a guardian account
 async function createGuardian(req, res) {
     try {
         // Check if the user creating the account is a secretary or admin
@@ -14,7 +13,6 @@ async function createGuardian(req, res) {
         const salt = bcrypt.genSaltSync(10);
         const hashedPassword = bcrypt.hashSync(req.body.guardian_pwd, salt);
     
-        // Create the guardian account
         const guardian = await Guardian.create({
             firstname: firstname,
             lastname: lastname,
@@ -37,20 +35,17 @@ async function createGuardian(req, res) {
     }
 }
 
-// Controller for editing a guardian account
 async function editGuardian(req, res) {
     try {
         const { guardian_id } = req.params;
         const { firstname, dateOfbirth, lastname, gender, username, guardian_pwd, civilState, email, phone_number, address, acc_pic } = req.body;
         const salt = bcrypt.genSaltSync(10);
         const hashedPassword = bcrypt.hashSync(req.body.guardian_pwd, salt);
-        // Find the guardian account by guardian_id
         let guardian = await Guardian.findByPk(guardian_id);
         if (!guardian) {
             return res.status(404).json({ error: 'Guardian not found' });
         }
 
-        // Update the guardian account
         guardian = await guardian.update({
             firstname: firstname,
             lastname: lastname,
@@ -75,10 +70,8 @@ async function editGuardian(req, res) {
     }
 }
 
-// Controller for fetching all guardian data
 async function getAllGuardians(req, res) {
     try {
-        // Fetch all guardians
         const guardians = await Guardian.findAll();
 
         return res.status(200).json(guardians);
