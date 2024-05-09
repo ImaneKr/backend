@@ -1,35 +1,50 @@
 const jwt = require("jsonwebtoken");
 const createError = require("../utils/error");
 
-function verifyToken(token) {
+const verifyToken = (req, res, next) => {
   const secret = process.env.JWT_SECRET_KEY;
+  let token;
+
+  // Extract token from different sources
+  if (req.cookies && req.cookies.token) {
+    token = req.cookies.token;
+  } else if (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
+    token = req.headers.authorization.split(' ')[1];
+  } else {
+    return next(createError(401, "No token provided"));
+  }
 
   try {
-    return jwt.verify(token, secret);
-  } catch (e) {
-    throw createError(401, "Invalid token");
-  }
-}
+    const payload = jwt.verify(token, secret);
 
-const verifyRole = (role) => (req, res, next) => {
+    
+    return payload && console.log(`the  payload is ${payload}`);
+  } catch (e) {
+    return next(createError(401, "Invalid token"));
+  }
+};
+
+const verifyRole = (requiredRole) => (req, res, next) => {
   const authHeader = req.headers.authorization;
   if (!authHeader) {
     return next(createError(401, "No token provided"));
   }
 
   const token = authHeader.split(" ")[1];
-  const payload = verifyToken(token);
+  try {
+    const payload = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    if (payload.role !== requiredRole) {
+      return next(createError(403, "Forbidden"));
+    }
+    req.user = payload;
 
-  if (payload.role !== role) {
-    return next(createError(403, "Forbidden"));
+    next();
+  } catch (error) {
+    return next(createError(401, "Invalid token"));
   }
-
-  req.user = payload;
-  next();
 };
-
+//Define separate middleware functions for each role
 const verifyAdmin = verifyRole("admin");
 const verifySecretary = verifyRole("secretary");
 const verifyTeacher = verifyRole("teacher");
-
 module.exports = { verifyToken, verifyAdmin, verifySecretary, verifyTeacher };

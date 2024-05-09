@@ -5,7 +5,6 @@ const cookieParser = require('cookie-parser');
 const guardianRouter = require('./routes/guardian');
 const staffRoute = require('./routes/staff');
 const authRoute = require('./routes/authentication');
-const dummyRoute = require('./routes/dummyRoutes');
 const kidRouter = require('./routes/kid');
 const eventRouter = require('./routes/event');
 const timetableRouter = require('./routes/timeTable');
@@ -29,8 +28,7 @@ app.use(cookieParser());
 // Define routes
 app.use('/guardian', guardianRouter);
 app.use('/staff', staffRoute);
-app.use('/login', authRoute);
-app.use('/create', dummyRoute);
+app.use('/auth', authRoute);
 app.use('/kid', kidRouter);
 app.use('/event', eventRouter);
 app.use('/announcement', announcementRouter);
