@@ -1,4 +1,4 @@
-const { Guardian, Staff } = require('../models/models');
+const { Guardian, Staff } = require('../src/models/models');
 const bcrypt = require("bcrypt");
 const verifyAdmin = require('../middlewares/verifyToken')
 

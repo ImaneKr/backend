@@ -1,6 +1,6 @@
 const createError = require("../utils/error");
 const jwt = require('jsonwebtoken');
-const { Guardian, Staff } = require('../models/models'); 
+const { Guardian, Staff } = require('../src/models/models');
 const bcrypt = require("bcrypt");
 
 
@@ -49,17 +49,17 @@ const createDummyAdmin = async (req, res, next) => {
   }
 };
 const createDummyGuardian = async (req, res, next) => {
-    try {
-      const { username, password } = req.body;
-      // hash password using bcrypt
-      const hashedPassword = await bcrypt.hash(password, 10);
-      const guardian = await Guardian.create({
-        username,
-        guardian_pwd: hashedPassword,
-      });
-      return res.status(201).json(guardian);
-    } catch (err) {
-      next(createError(500, "Error creating guardian"));
-    }
-  };
-module.exports = { createDummyTeacher, createDummySecretary,createDummyAdmin,createDummyGuardian };
+  try {
+    const { username, password } = req.body;
+    // hash password using bcrypt
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const guardian = await Guardian.create({
+      username,
+      guardian_pwd: hashedPassword,
+    });
+    return res.status(201).json(guardian);
+  } catch (err) {
+    next(createError(500, "Error creating guardian"));
+  }
+};
+module.exports = { createDummyTeacher, createDummySecretary, createDummyAdmin, createDummyGuardian };
