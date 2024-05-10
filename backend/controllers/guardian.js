@@ -9,25 +9,31 @@ async function createGuardian(req, res) {
               return res.status(403).json({ error: 'Unauthorized' });
           }*/
 
-        const { firstname, lastname, gender, username, guardian_pwd, civilstate, email, phone_number, address, acc_pic } = req.body;
-        const salt = bcrypt.genSaltSync(10);
-        const hashedPassword = bcrypt.hashSync(req.body.guardian_pwd, salt);
+        const { firstname,
+            lastname,
+            gender,
+            username,
+            guardian_pwd,
+            civilState,
+            email,
+            phone_number,
+            address,
+            acc_pic } = req.body;
 
         const guardian = await Guardian.create({
-            firstname: firstname,
-            lastname: lastname,
-            gender: gender,
-            username: username,
-            guardian_pwd: hashedPassword,
-            civilState: civilstate,
-            email: email,
-            phone_number: phone_number,
-            address: address,
-            acc_pic: acc_pic
+            firstname,
+            lastname,
+            gender,
+            username,
+            guardian_pwd,
+            civilState,
+            email,
+            phone_number,
+            address,
+            acc_pic,
+            acc_active:true
         });
         console.log(guardian.guardian_pwd);
-        console.log("----------");
-        console.log(hashedPassword);
         return res.status(201).json(guardian);
     } catch (error) {
         console.error('Error creating guardian:', error);
@@ -38,7 +44,7 @@ async function createGuardian(req, res) {
 async function editGuardian(req, res) {
     try {
         const { guardian_id } = req.params;
-        const { firstname, dateOfbirth, lastname, gender, username, guardian_pwd, civilstate, email, phone_number, address, acc_pic } = req.body;
+        const { firstname, lastname, gender, username, guardian_pwd, civilstate, email, phone_number, address, acc_pic } = req.body;
         const salt = bcrypt.genSaltSync(10);
         const hashedPassword = bcrypt.hashSync(req.body.guardian_pwd, salt);
         let guardian = await Guardian.findByPk(guardian_id);
@@ -81,4 +87,33 @@ async function getAllGuardians(req, res) {
     }
 }
 
-module.exports = { createGuardian, editGuardian, getAllGuardians };
+async function getGuardianById(req, res) {
+    try {
+        const { guardian_id } = req.params;
+        const guardian = await Guardian.findByPk(guardian_id);
+        if (!guardian) {
+            return res.status(404).json({ error: 'Guardian not found' });
+        }
+        return res.status(200).json(guardian);
+    } catch (error) {
+        console.error('Error fetching guardian by ID:', error);
+        return res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
+async function deleteGuardian(req, res) {
+    try {
+        const { guardian_id } = req.params;
+        const guardian = await Guardian.findByPk(guardian_id);
+        if (!guardian) {
+            return res.status(404).json({ error: 'Guardian not found' });
+        }
+        await guardian.destroy();
+        return res.status(204).send();
+    } catch (error) {
+        console.error('Error deleting guardian:', error);
+        return res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
+module.exports = { createGuardian, editGuardian, getAllGuardians, getGuardianById, deleteGuardian };
