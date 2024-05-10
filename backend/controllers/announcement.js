@@ -1,4 +1,4 @@
-const { Announcement } = require('../src/models/models');
+const { Announcement } = require('../models/models');
 
 const createAnnouncement = async (req, res) => {
   try {

@@ -73,7 +73,7 @@ async function editKidProfile(req, res) {
             dateOfbirth: dateOfbirth,
             allergies: allergies,
             hobbies: hobbies,
-            authorizepickups: authorizedpickups,
+            authorizedpickups: authorizedpickups,
             syndromes: syndromes,
         });
 
@@ -93,7 +93,7 @@ async function deleteKidProfile(req, res) {
             return res.status(404).json({ error: 'KidProfile not found' });
         }
 
-        await kid.destroy();
+        await kidProfile.destroy();
 
         return res.status(204).end();
     } catch (error) {

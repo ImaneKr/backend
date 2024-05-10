@@ -1,5 +1,5 @@
 const express = require('express');
-const sequelize = require('./routes/config/db');
+const sequelize = require('./config/db');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const guardianRouter = require('./routes/guardian');
