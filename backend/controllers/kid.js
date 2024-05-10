@@ -24,7 +24,7 @@ async function createKidProfile(req, res) {
         }
 
         const kidProfile = await Kid.create({
-            guardian_id: guardianId, // Associate with the guardian_id from the request
+            guardian_id: guardianId,
             firstname: firstname,
             lastname: lastname,
             dateOfbirth: dateOfbirth,
@@ -118,9 +118,49 @@ async function getAllKidProfiles(req, res) {
     }
 }
 
+async function getKidProfileById(req, res) {
+    try {
+        const { id } = req.params;
+
+        const kidProfile = await Kid.findByPk(id, {
+            include: [{
+                model: Guardian,
+                attributes: ['guardian_id', 'firstname', 'lastname', 'email'] // Include only necessary guardian attributes
+            }]
+        });
+
+        if (!kidProfile) {
+            return res.status(404).json({ error: 'KidProfile not found' });
+        }
+
+        return res.status(200).json(kidProfile);
+    } catch (error) {
+        console.error('Error fetching KidProfile by ID:', error);
+        return res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
+/*async function getKidsByGuardianId(req, res) {
+    try {
+        const { guardianId } = req.params;
+
+        const kids = await Kid.findAll({
+            where: {
+                guardian_id: guardianId
+            }
+        });
+
+        return res.status(200).json(kids);
+    } catch (error) {
+        console.error('Error fetching kids by Guardian ID:', error);
+        return res.status(500).json({ error: 'Internal server error' });
+    }
+}
+*/
 module.exports = {
     createKidProfile,
     editKidProfile,
     deleteKidProfile,
-    getAllKidProfiles
+    getAllKidProfiles,
+    getKidProfileById,
 };
