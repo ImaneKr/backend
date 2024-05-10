@@ -1,5 +1,5 @@
 const createError = require('../utils/error');
-const { Guardian, Staff } = require('../src/models/models');
+const { Guardian, Staff } = require('../models/models');
 const bcrypt = require("bcrypt");
 const { generateToken } = require('../middlewares/generateToken');
 

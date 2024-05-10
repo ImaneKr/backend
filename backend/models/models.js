@@ -1,5 +1,5 @@
 const { ENUM } = require("sequelize");
-const sequelize = require('../routes/config/db')
+const sequelize = require('../config/db')
 var DataTypes = require("sequelize").DataTypes;
 
 const Category = sequelize.define('Category', {

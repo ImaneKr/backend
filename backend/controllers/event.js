@@ -1,4 +1,4 @@
-const { Event, EventList, Staff } = require('../src/models/models');
+const { Event, EventList, Staff } = require('../models/models');
 
 const createEvent = async (req, res) => {
   try {
