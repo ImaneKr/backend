@@ -1,12 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const { createStaff, deleteStaff, editStaff } = require('../controllers/staff');
-const verifyAdmin = require('../middlewares/verifyToken')
+const { verifyToken, verifyAdmin } = require('../middlewares/verifyToken');
 
-router.post('/',createStaff);
+router.use(verifyToken);
 
-router.put('/:staff_id',editStaff );
+router.post('/',verifyAdmin,createStaff);
 
-router.delete('/', deleteStaff);
+router.put('/:staff_id',verifyAdmin,editStaff );
+
+router.delete('/', verifyAdmin,deleteStaff);
 
 module.exports = router;

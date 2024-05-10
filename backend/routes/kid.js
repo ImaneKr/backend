@@ -1,13 +1,16 @@
 const express = require('express');
 const router = express.Router();
 const { createKidProfile, editKidProfile, deleteKidProfile, getAllKidProfiles } = require('../controllers/kid');
+const { verifyToken, verifyAdmin, verifySecretary } = require('../middlewares/verifyToken');
 
-router.post('/', createKidProfile);
+router.use(verifyToken);
 
-router.put('/:id', editKidProfile);
+router.post('/', verifyAdmin, verifySecretary, createKidProfile);
 
-router.delete('/:id', deleteKidProfile);
+router.put('/:id', verifyAdmin, verifySecretary, editKidProfile);
 
-router.get('/', getAllKidProfiles);
+router.delete('/:id',verifyAdmin, verifySecretary,  deleteKidProfile);
+
+router.get('/', verifyAdmin, verifySecretary, getAllKidProfiles);
 
 module.exports = router;

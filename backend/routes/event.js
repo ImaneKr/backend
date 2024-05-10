@@ -1,22 +1,18 @@
 const express = require('express');
 const router = express.Router();
-const {
-    createEvent,
-    editEvent,
-    deleteEvent,
-    getAllEvents,
-    createEventListEntry
-} = require('../controllers/event');
-const { verifyToken, verifyAdmin } = require('../middlewares/verifyToken');
 
-router.post('/', createEvent);
+const { createEvent, editEvent, deleteEvent, getAllEvents, createEventListEntry } = require('../controllers/event');
+const { verifyToken, verifyAdmin, verifySecretary } = require('../middlewares/verifyToken');
 
-router.put('/:event_id', editEvent);
+router.use(verifyToken);
+router.post('/',  verifyAdmin, verifySecretary, createEvent);
 
-router.delete('/:event_id', deleteEvent);
+router.put('/:event_id',  verifyAdmin, verifySecretary,editEvent);
 
-router.get('/', getAllEvents);
+router.delete('/:event_id',  verifyAdmin, verifySecretary, deleteEvent);
 
-router.post('/:eventId/list', createEventListEntry);
+router.get('/',  verifyAdmin, verifySecretary,getAllEvents);
+
+router.post('/:eventId/list', verifyAdmin, verifySecretary, createEventListEntry);
 
 module.exports = router;
