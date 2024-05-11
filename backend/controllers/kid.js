@@ -140,7 +140,7 @@ async function getKidProfileById(req, res) {
     }
 }
 
-/*async function getKidsByGuardianId(req, res) {
+async function getKidsByGuardianId(req, res) {
     try {
         const { guardianId } = req.params;
 
@@ -156,11 +156,12 @@ async function getKidProfileById(req, res) {
         return res.status(500).json({ error: 'Internal server error' });
     }
 }
-*/
+
 module.exports = {
     createKidProfile,
     editKidProfile,
     deleteKidProfile,
     getAllKidProfiles,
     getKidProfileById,
+    getKidsByGuardianId
 };
