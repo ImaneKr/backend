@@ -1,8 +1,12 @@
+const jwt = require("jsonwebtoken");
+const dotenv = require("dotenv");
 const createError = require('../utils/error');
 const { Guardian, Staff } = require('../models/models');
 const bcrypt = require("bcrypt");
-const { generateToken } = require('../middlewares/generateToken'); 
+const { generateGuardianToken, generateStaffToken } = require('../middlewares/generateToken');
 const { verifyToken } = require('../middlewares/verifyToken');
+
+dotenv.config();
 // login Render page
 const login_get = (req, res) => {
   // res.render('page');
@@ -10,7 +14,7 @@ const login_get = (req, res) => {
 };
 
 // LOGIN GUARDIAN APP
-const guardianLogin = async (req, res, next) => {
+const guardianLogin = async (req, res) => {
   const { username, guardian_pwd } = req.body;
 
   try {
@@ -27,7 +31,7 @@ const guardianLogin = async (req, res, next) => {
     }
 
     // Generate and return a token without a role
-    const token = await generateToken(guardian);
+    const token = await generateGuardianToken(guardian);
     res.cookie('token', token, { httpOnly: true, maxAge: 3600000 });
     res.json({ token, message: 'Login successful' });
   } catch (error) {
@@ -53,7 +57,7 @@ const staffLogin = async (req, res, next) => {
     }
 
     // Generate and return a token with the STAFF's role
-    const token = await generateToken({ id: staff.id, username: staff.username, role: staff.role });
+    const token = await generateStaffToken({ id: staff.id, username: staff.username, role: staff.role });
     res.cookie('token', token, { httpOnly: true, maxAge: 3600000 });
     res.json({ token, message: 'Login successful' });
   } catch (error) {
@@ -67,7 +71,10 @@ const staffLogin = async (req, res, next) => {
 const logout = async (req, res, next) => {
   try {
     // Get the token from the cookie or headers
-    const decoded = await verifyToken(req, res, next);
+    const token = req.cookies.token || req.headers.authorization?.split(' ')[1];
+
+    // Verify the token
+    const decoded = await jwt.verify(token, process.env.JWT_SECRET_KEY);
 
     // Clear token cookie
     res.clearCookie('token', {

@@ -5,24 +5,24 @@ const verifyToken = (req, res, next) => {
   const secret = process.env.JWT_SECRET_KEY;
   let token;
 
-  // Extract token from different sources
-  if (req.cookies && req.cookies.token) {
-    token = req.cookies.token;
-  } else if (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
+  // Extract token from headers or cookies
+  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
     token = req.headers.authorization.split(' ')[1];
+  } else if (req.cookies && req.cookies.token) {
+    token = req.cookies.token;
   } else {
     return next(createError(401, "No token provided"));
   }
 
   try {
     const payload = jwt.verify(token, secret);
-
-    
-    return payload && console.log(`the  payload is ${payload}`);
+    req.user = payload;
+    next();
   } catch (e) {
     return next(createError(401, "Invalid token"));
   }
 };
+
 
 const verifyRole = (requiredRole) => (req, res, next) => {
   const authHeader = req.headers.authorization;
@@ -34,7 +34,7 @@ const verifyRole = (requiredRole) => (req, res, next) => {
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET_KEY);
     if (payload.role !== requiredRole) {
-      return next(createError(403, "Forbidden"));
+       return res.status(403).send({ error: 'Forbidden' });
     }
     req.user = payload;
 

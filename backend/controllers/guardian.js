@@ -80,5 +80,25 @@ async function getAllGuardians(req, res) {
         return res.status(500).json({ error: 'Internal server error' });
     }
 }
-
-module.exports = { createGuardian, editGuardian, getAllGuardians };
+async function getGuardianById(req, res, next) {
+    try {
+      const { guardian_id } = req.params;
+      console.log('Fetching guardian with ID:', guardian_id);
+  
+      const guardian = await Guardian.findByPk(guardian_id);
+  
+      if (!guardian) {
+        console.log('Guardian not found');
+        return res.status(404).json({ error: 'Guardian not found' });
+      }
+  
+      console.log('Retrieved guardian:', guardian.toJSON());
+      return res.status(200).json(guardian);
+    } catch (error) {
+      console.error('Error fetching guardian by ID:', error);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+  }
+  
+  
+module.exports = { createGuardian, editGuardian, getAllGuardians,getGuardianById };
