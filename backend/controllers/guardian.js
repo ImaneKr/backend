@@ -83,8 +83,8 @@ async function getAllGuardians(req, res) {
 
 async function getGuardianById(req, res) {
     try {
-        const { guardian_id } = req.params;
-        const guardian = await Guardian.findByPk(guardian_id);
+        const { id } = req.params;
+        const guardian = await Guardian.findByPk(id);
         if (!guardian) {
             return res.status(404).json({ error: 'Guardian not found' });
         }
