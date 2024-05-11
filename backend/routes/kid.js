@@ -19,7 +19,7 @@ router.put('/:id', editKidProfile);
 router.delete('/:id', deleteKidProfile);
 router.get('/:id', getKidProfileById);
 // Get all Kid Profiles
-//router.get('/', getAllKidProfiles);
+router.get('/', getAllKidProfiles);
 
 // Get a Kid Profile by ID
 
