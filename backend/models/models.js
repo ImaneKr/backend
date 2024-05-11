@@ -118,7 +118,9 @@ const Kid = sequelize.define('Kid', {
   authorizedpickups: {
     type: DataTypes.JSON
   },
-
+  age: {
+    type: DataTypes.INTEGER
+  },
   guardian_id: {
     type: DataTypes.INTEGER,
     allowNull: false,
@@ -141,6 +143,10 @@ const Kid = sequelize.define('Kid', {
 }
 );
 Kid.belongsTo(Guardian, { foreignKey: 'guardian_id' })
+Kid.belongsTo(Category, {
+  foreignKey: 'category_id',
+  as: 'category'
+});
 const Staff = sequelize.define('Staff', {
   staff_id: {
     type: DataTypes.INTEGER,

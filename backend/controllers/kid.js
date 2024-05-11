@@ -34,7 +34,8 @@ async function createKidProfile(req, res) {
             profile_pic: profilePic,
             syndromes: syndromes,
             authorizedpickups: authorizedpickups,
-            category_id: category_id, // Assign the calculated category_id
+            category_id: category_id,
+            age: age, // Assign the calculated category_id
             active: true,
         });
 
@@ -105,13 +106,18 @@ async function deleteKidProfile(req, res) {
 async function getAllKidProfiles(req, res) {
     try {
         const allKidProfiles = await Kid.findAll({
-            include: [{
-                model: Guardian,
-                attributes: ['guardian_id', 'firstname', 'lastname', 'email'] // Include only necessary guardian attributes
-            },{
-                model:Category,
-                attributes:['category_id','category_name']
-            }]
+            include: [
+                {
+                    model: Guardian,
+                    // Alias for the association
+                    attributes: ['firstname', 'lastname'] // Include guardian's first name and last name
+                },
+                {
+                    model: Category,
+                    as: 'category', // Alias for the association
+                    attributes: ['category_name'] // Include category name
+                }
+            ],
         });
 
         return res.status(200).json(allKidProfiles);
