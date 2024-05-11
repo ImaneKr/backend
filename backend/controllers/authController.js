@@ -14,7 +14,7 @@ const login_get = (req, res) => {
 };
 
 // LOGIN GUARDIAN APP
-const guardianLogin = async (req, res) => {
+const guardianLogin = async (req, res,next) => {
   const { username, guardian_pwd } = req.body;
 
   try {
