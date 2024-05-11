@@ -21,17 +21,17 @@ const guardianLogin = async (req, res, next) => {
       return next(createError(400, "Guardian not found!"));
     }
 
-    const passwordMatch = await bcrypt.compare(guardian_pwd, guardian.guardian_pwd);
 
-    if (!passwordMatch) {
+    if (guardian_pwd!= guardian.guardian_pwd) {
       return next(createError(401, "Username or password incorrect!"));
     }
+    else{console.log("uardian log in successfully");   
+    return res.status(201).json(guardian);
+
+}
 
     // Generate and return a token
-    const token = await generateToken(guardian);
-    res.cookie('token', token, { httpOnly: true, maxAge: 3600000 });
-    res.json({ token, message: 'Login successful' });
-
+    
   } catch (error) {
     console.error('Error logging for Guardian:', error);
     return next(createError(500, "Error logging in!"));

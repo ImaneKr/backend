@@ -108,6 +108,9 @@ async function getAllKidProfiles(req, res) {
             include: [{
                 model: Guardian,
                 attributes: ['guardian_id', 'firstname', 'lastname', 'email'] // Include only necessary guardian attributes
+            },{
+                model:Category,
+                attributes:['category_id','category_name']
             }]
         });
 
