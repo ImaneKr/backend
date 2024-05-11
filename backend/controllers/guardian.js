@@ -31,7 +31,7 @@ async function createGuardian(req, res) {
             phone_number,
             address,
             acc_pic,
-            acc_active:true
+            acc_active: true
         });
         console.log(guardian.guardian_pwd);
         return res.status(201).json(guardian);
@@ -45,8 +45,6 @@ async function editGuardian(req, res) {
     try {
         const { guardian_id } = req.params;
         const { firstname, lastname, gender, username, guardian_pwd, civilstate, email, phone_number, address, acc_pic } = req.body;
-        const salt = bcrypt.genSaltSync(10);
-        const hashedPassword = bcrypt.hashSync(req.body.guardian_pwd, salt);
         let guardian = await Guardian.findByPk(guardian_id);
         if (!guardian) {
             return res.status(404).json({ error: 'Guardian not found' });
@@ -57,18 +55,14 @@ async function editGuardian(req, res) {
             lastname: lastname,
             gender: gender,
             username: username,
-            guardian_pwd: hashedPassword,
+            guardian_pwd: guardian_pwd,
             civilState: civilstate,
             email: email,
             phone_number: phone_number,
             address: address,
             acc_pic: acc_pic
         });
-        console.log(hashedPassword);
-        console.log("44444444");
-        console.log(guardian.guardian_pwd);
-        console.log("111111111111");
-        console.log(guardian_pwd);
+
         return res.status(200).json(guardian);
     } catch (error) {
         console.error('Error editing guardian:', error);
