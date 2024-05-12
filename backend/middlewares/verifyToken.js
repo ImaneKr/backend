@@ -24,7 +24,7 @@ const verifyToken = (req, res, next) => {
 };
 
 
-const verifyRole = (requiredRole) => (req, res, next) => {
+const verifyRole = (...requiredRoles) => (req, res, next) => {
   const authHeader = req.headers.authorization;
   if (!authHeader) {
     return next(createError(401, "No token provided"));
@@ -33,7 +33,8 @@ const verifyRole = (requiredRole) => (req, res, next) => {
   const token = authHeader.split(" ")[1];
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET_KEY);
-    if (payload.role !== requiredRole) {
+    console.log(payload.role);
+    if (!requiredRoles.includes(payload.role)) {
        return res.status(403).send({ error: 'Forbidden' });
     }
     req.user = payload;
@@ -47,4 +48,5 @@ const verifyRole = (requiredRole) => (req, res, next) => {
 const verifyAdmin = verifyRole("admin");
 const verifySecretary = verifyRole("secretary");
 const verifyTeacher = verifyRole("teacher");
-module.exports = { verifyToken, verifyAdmin, verifySecretary, verifyTeacher };
+const verifyAdminOrSecretary = verifyRole("admin", "secretary");
+module.exports = { verifyToken, verifyAdmin, verifySecretary, verifyTeacher,verifyAdminOrSecretary };

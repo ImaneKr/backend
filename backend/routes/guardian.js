@@ -1,16 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const { createGuardian, editGuardian, getAllGuardians,getGuardianById } = require('../controllers/guardian');
-const { verifyToken, verifyAdmin, verifySecretary } = require('../middlewares/verifyToken');
+const { verifyToken, verifyAdmin, verifySecretary, verifyAdminOrSecretary } = require('../middlewares/verifyToken');
 
-router.use(verifyToken);
+router.post('/', verifyToken, verifyAdminOrSecretary, createGuardian);
 
-router.post('/',verifyAdmin, verifySecretary,  createGuardian);
+router.put('/:guardian_id', verifyToken, verifyAdminOrSecretary, editGuardian);
 
-router.put('/:guardian_id',  editGuardian);
+router.get('/', verifyToken, verifyAdminOrSecretary, getAllGuardians);
 
-router.get('/', getAllGuardians);
-
-router.get('/:guardian_id', getGuardianById);
+router.get('/:guardian_id', verifyToken, verifyAdminOrSecretary, getGuardianById);
 
 module.exports = router;

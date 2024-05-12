@@ -102,9 +102,20 @@ async function editStaff(req, res) {
     res.status(500).json({ error: 'Failed to update staff account' });
   }
 };
+async function getAllStaffs(req, res) {
+  try {
+      const staffs = await Staff.findAll();
+
+      return res.status(200).json(staffs);
+  } catch (error) {
+      console.error('Error fetching all staffs:', error);
+      return res.status(500).json({ error: 'Internal server error' });
+  }
+}
 
 module.exports = {
   createStaff,
   deleteStaff,
-  editStaff
+  editStaff,
+  getAllStaffs
 };

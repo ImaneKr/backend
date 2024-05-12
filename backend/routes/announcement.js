@@ -1,17 +1,17 @@
 const express = require('express');
 const router = express.Router();
 const { createAnnouncement, editAnnouncement, unpublishAnnouncement, getAllAnnouncements } = require('../controllers/announcement');
-const { verifyToken, verifyAdmin, verifySecretary } = require('../middlewares/verifyToken');
+const { verifyToken, verifyAdmin, verifySecretary, verifyAdminOrSecretary } = require('../middlewares/verifyToken');
 
 
-router.use(verifyToken);
 
-router.post('/', verifyAdmin, verifySecretary, createAnnouncement);
 
-router.put('/:announcement_id',  verifyAdmin, verifySecretary, editAnnouncement);
+router.post('/', verifyToken, verifyAdminOrSecretary,createAnnouncement);
 
-router.put('/:announcement_id/unpublish', verifyAdmin, verifySecretary,  unpublishAnnouncement);
+router.put('/:announcement_id', verifyToken, verifyAdminOrSecretary,editAnnouncement);
 
-router.get('/', verifyAdmin, verifySecretary, getAllAnnouncements);
+router.put('/:announcement_id/unpublish', verifyToken, verifyAdminOrSecretary,  unpublishAnnouncement);
+
+router.get('/', verifyToken, verifyAdminOrSecretary,getAllAnnouncements);
 
 module.exports = router;
