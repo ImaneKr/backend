@@ -1,5 +1,4 @@
 const { Guardian, Staff } = require('../models/models'); // Import the Guardian model
-const bcrypt = require("bcrypt");
 
 async function createGuardian(req, res) {
     try {

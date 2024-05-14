@@ -1,5 +1,4 @@
 const { Guardian, Staff } = require('../models/models');
-const bcrypt = require("bcrypt");
 const verifyAdmin = require('../middlewares/verifyToken')
 
 // Controller function to create a new staff account
@@ -10,11 +9,13 @@ async function createStaff(req, res) {
       if (role !== 'secretary' && role !== 'admin') {
           return res.status(403).json({ error: 'Unauthorized' });
       }*/
-
-    const { firstname, lastname, username, role, staff_pic, phone_number, email, salary, staff_pwd } = req.body;
-    const salt = bcrypt.genSaltSync(10);
-    const hashedPassword = bcrypt.hashSync(req.body.staff_pwd, salt);
-
+    let salary;
+    const { firstname, lastname, username, role, staff_pic, phone_number, email, staff_pwd } = req.body;
+    if (role == 'teacher') {
+      salary = 50000;
+    } else {
+      salary = 45000;
+    }
     // Create the guardian account
     const staff = await Staff.create({
       firstname: firstname,
@@ -25,11 +26,8 @@ async function createStaff(req, res) {
       phone_number: phone_number,
       email: email,
       salary: salary,
-      staff_pwd: hashedPassword,
+      staff_pwd: staff_pwd,
     });
-    console.log(staff.staff_pwd);
-    console.log("----------");
-    console.log(hashedPassword);
     return res.status(201).json(staff);
   } catch (error) {
     console.error('Error creating staff:', error);
@@ -102,9 +100,26 @@ async function editStaff(req, res) {
     res.status(500).json({ error: 'Failed to update staff account' });
   }
 };
+async function getAllStaff(req, res) {
+  try {
+    // Fetch all staff from the database
+    const allStaff = await Staff.findAll();
+
+    if (allStaff.length === 0) {
+      return res.status(404).json({ error: 'No staff found' });
+    }
+
+    // Return the array of staff
+    res.status(200).json(allStaff);
+  } catch (error) {
+    console.error('Error fetching all staff:', error);
+    res.status(500).json({ error: 'Failed to fetch staff' });
+  }
+};
 
 module.exports = {
   createStaff,
   deleteStaff,
-  editStaff
+  editStaff,
+  getAllStaff
 };

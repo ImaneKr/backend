@@ -35,11 +35,11 @@ async function createKidProfile(req, res) {
             syndromes: syndromes,
             authorizedpickups: authorizedpickups,
             category_id: category_id,
-            age: age, // Assign the calculated category_id
+            age: age, // Assign the calculated age to the age attribute
             active: true,
         });
 
-        return res.status(201).json(kidProfile);
+        return res.status(201).json({ ...kidProfile.toJSON(), age: age });
     } catch (error) {
         console.error('Error creating KidProfile:', error);
         return res.status(500).json({ error: 'Internal server error' });
@@ -110,12 +110,13 @@ async function getAllKidProfiles(req, res) {
                 {
                     model: Guardian,
                     // Alias for the association
-                    attributes: ['firstname', 'lastname'] // Include guardian's first name and last name
+
+                    attributes: ['guardian_id', 'firstname', 'lastname'] // Include guardian's first name and last name
                 },
                 {
                     model: Category,
                     as: 'category', // Alias for the association
-                    attributes: ['category_name'] // Include category name
+                    attributes: ['category_id', 'category_name'] // Include category name
                 }
             ],
         });

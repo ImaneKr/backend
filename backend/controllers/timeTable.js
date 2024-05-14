@@ -3,11 +3,7 @@ const Timetable = require('../models/models');
 // Controller function to create a new timetable entry
 const createTimetableEntry = async (req, res) => {
   try {
-    // Check if the user making the request is authorized (admin or secretary)
-    if (req.user.role !== 'admin' && req.user.role !== 'secretary') {
-      return res.status(403).json({ error: 'Unauthorized access' });
-    }
-
+    
     const { category_id, subject_name, day_of_week, start_time, end_time, duration } = req.body;
 
     // Create timetable entry in the database

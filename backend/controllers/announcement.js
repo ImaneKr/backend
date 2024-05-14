@@ -2,9 +2,6 @@ const { Announcement } = require('../models/models');
 
 const createAnnouncement = async (req, res) => {
   try {
-    /* if (req.user.role !== 'admin' && req.user.role !== 'secretary') {
-       return res.status(403).json({ error: 'Unauthorized access' });
-     }*/
 
     const { announcement_title, announcement_desc, announcement_image } = req.body;
 
@@ -24,9 +21,7 @@ const createAnnouncement = async (req, res) => {
 
 const editAnnouncement = async (req, res) => {
   try {
-    /* if (req.user.role !== 'admin' && req.user.role !== 'secretary') {
-       return res.status(403).json({ error: 'Unauthorized access' });
-     }*/
+    
 
     const { announcement_id, announcement_title, announcement_desc, announcement_image, published } = req.body;
 

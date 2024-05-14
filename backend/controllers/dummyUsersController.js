@@ -1,7 +1,6 @@
 const createError = require("../utils/error");
 const jwt = require('jsonwebtoken');
 const { Guardian, Staff } = require('../models/models');
-const bcrypt = require("bcrypt");
 
 
 const createDummyTeacher = async (req, res, next) => {

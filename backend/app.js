@@ -10,14 +10,17 @@ const kidRouter = require('./routes/kid');
 const eventRouter = require('./routes/event');
 const timetableRouter = require('./routes/timeTable');
 const announcementRouter = require('./routes/announcement');
-/*const paymentRouter = require('./routes/payment');
+const categoryRouter = require('./routes/category');
 const lunchMenuRouter = require('./routes/lunchmenu');
+/*const paymentRouter = require('./routes/payment');
 const evaluatioRouter = require('./routes/evaluation');*/
 
-const bcrypt = require('bcrypt');
 // Initialize Express app
 const app = express();
-app.use(cors());
+app.use(cors({
+    origin: ['http://localhost:25298', 'http://localhost:3000'],
+    credentials: true // If you're using cookies or authorization headers
+}));
 
 
 const PORT = process.env.PORT || 3001;
@@ -35,8 +38,9 @@ app.use('/kid', kidRouter);
 app.use('/event', eventRouter);
 app.use('/announcement', announcementRouter);
 app.use('/timetable', timetableRouter);
-/*app.use('/lunchmenu', lunchMenuRouter);
-app.use('/payment', paymentRouter);
+app.use('/category', categoryRouter);
+app.use('/lunchmenu', lunchMenuRouter);
+/*app.use('/payment', paymentRouter);
 app.use('/evaluation', evaluatioRouter);*/
 
 

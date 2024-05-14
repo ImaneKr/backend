@@ -303,6 +303,14 @@ const Payment = sequelize.define('Payment', {
   payment_date: {
     type: DataTypes.DATE
   },
+  guardian_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false // Assuming a payment must be associated with a guardian
+  },
+  kid_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false // Assuming a payment must be associated with a kid
+  },
   amount: {
     type: DataTypes.STRING(10),
     allowNull: false
@@ -313,6 +321,10 @@ const Payment = sequelize.define('Payment', {
   }
 }, {
   tableName: 'Payment'
+});
+Payment.belongsTo(Kid, {
+  foreignKey: 'kid_id',
+  onDelete: 'CASCADE'
 });
 const Timetable = sequelize.define('Timetable', {
   id: {
@@ -447,7 +459,7 @@ const LunchMenu = sequelize.define('LunchMenu', {
   },
   meal_name: {
     type: DataTypes.STRING(50),
-    allowNull: false
+
   },
   item1_name: {
     type: DataTypes.STRING(50)

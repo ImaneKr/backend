@@ -1,6 +1,5 @@
 const createError = require('../utils/error');
 const { Guardian, Staff } = require('../models/models');
-const bcrypt = require("bcrypt");
 const { generateToken } = require('../middlewares/generateToken');
 
 // login Render page
@@ -22,16 +21,17 @@ const guardianLogin = async (req, res, next) => {
     }
 
 
-    if (guardian_pwd!= guardian.guardian_pwd) {
+    if (guardian_pwd != guardian.guardian_pwd) {
       return next(createError(401, "Username or password incorrect!"));
     }
-    else{console.log("uardian log in successfully");   
-    return res.status(201).json(guardian);
+    else {
+      console.log("uardian log in successfully");
+      return res.status(201).json(guardian);
 
-}
+    }
 
     // Generate and return a token
-    
+
   } catch (error) {
     console.error('Error logging for Guardian:', error);
     return next(createError(500, "Error logging in!"));
@@ -39,7 +39,6 @@ const guardianLogin = async (req, res, next) => {
 };
 
 const staffLogin = async (req, res, next) => {
-
   const { username, staff_pwd } = req.body;
 
   try {
@@ -49,9 +48,8 @@ const staffLogin = async (req, res, next) => {
       return next(createError(400, "Staff not found!"));
     }
 
-    const passwordMatch = await bcrypt.compare(staff_pwd, staff.staff_pwd);
-
-    if (!passwordMatch) {
+    // Compare passwords directly
+    if (staff_pwd !== staff.staff_pwd) {
       return next(createError(401, "Username or password incorrect!"));
     }
 
@@ -65,6 +63,7 @@ const staffLogin = async (req, res, next) => {
     return next(createError(500, "Error logging in!"));
   }
 };
+
 
 const logout_get = (req, res) => {
   res.send("Logged out successfully!");

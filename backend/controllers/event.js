@@ -1,19 +1,20 @@
 const { Event, EventList, Staff } = require('../models/models');
 
 const createEvent = async (req, res) => {
+  let event_desc = "abc"
   try {
-    /* if (req.Staff.role !== 'admin' && req.Staff.role !== 'secretary') {
-       return res.status(403).json({ error: 'Unauthorized access' });
-     }*/
+    const { event_name, event_date, event_image } = req.body;
 
-    const { event_name, event_desc, event_date, event_image } = req.body;
+    // Check if the event date is in the future
+    const currentDate = new Date();
+    const isFutureEvent = new Date(event_date) > currentDate;
 
     const event = await Event.create({
       event_name: event_name,
-      event_desc: event_desc,
       event_date: event_date,
       event_image: event_image,
-      published: true // Set published to true
+      event_desc: event_desc,
+      published: isFutureEvent // Set published to true if the event date is in the future
     });
 
     res.status(201).json(event);
@@ -23,13 +24,11 @@ const createEvent = async (req, res) => {
   }
 };
 
+
 const editEvent = async (req, res) => {
   try {
-    /*if (req.Staff.role !== 'admin' && req.Staff.role !== 'secretary') {
-      return res.status(403).json({ error: 'Unauthorized access' });
-    }*/
-
-    const { event_id, event_name, event_desc, event_date, event_image, published } = req.body;
+    let event_desc = "abc"
+    const { event_id, event_name, event_date, event_image, published } = req.body;
 
     let event = await Event.findByPk(event_id);
 
@@ -54,9 +53,6 @@ const editEvent = async (req, res) => {
 
 const deleteEvent = async (req, res) => {
   try {
-    /*if (req.Staff.role !== 'admin' && req.Staff.role !== 'secretary') {
-      return res.status(403).json({ error: 'Unauthorized access' });
-    }*/
 
     const { event_id } = req.params;
 
