@@ -1,4 +1,4 @@
-const express = require('express');
+/*const express = require('express');
 const router = express.Router();
 const { createLunchMenu, editLunchMenu, deleteLunchMenu, getAllLunchMenus } = require('../controllers/lunchmenu');
 
@@ -17,4 +17,4 @@ router.delete('/:menu_id', verifyAdmin, deleteLunchMenu);
 // Route to get all lunch menus
 router.get('/', getAllLunchMenus);
 
-module.exports = router;
+module.exports = router;*/

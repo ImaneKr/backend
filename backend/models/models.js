@@ -302,8 +302,12 @@ const Payment = sequelize.define('Payment', {
     allowNull: false
   },
   status: {
-    type: DataTypes.ENUM('paid', 'unpaid'),
+    type: DataTypes.ENUM('paid', 'unpaid', 'failed', 'expired'),
     allowNull: false
+  },
+   checkoutId: {
+    type: DataTypes.INTEGER,
+    allowNull: true 
   }
 }, {
   tableName: 'Payment'
