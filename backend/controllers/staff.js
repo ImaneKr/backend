@@ -1,20 +1,18 @@
 const { Guardian, Staff } = require('../models/models');
 const verifyAdmin = require('../middlewares/verifyToken')
 
-// Controller function to create a new staff account
 async function createStaff(req, res) {
   try {
-    // Check if the user creating the account is a secretary or admin
-    /* const { role } = req.Staff; // Assuming user's role is stored in req.user.role
-      if (role !== 'secretary' && role !== 'admin') {
-          return res.status(403).json({ error: 'Unauthorized' });
-      }*/
     let salary;
     const { firstname, lastname, username, role, staff_pic, phone_number, email, staff_pwd } = req.body;
     if (role == 'teacher') {
       salary = 50000;
-    } else {
+    } else if(role == 'secretary') {
       salary = 45000;
+    }else if (role === 'admin') {
+      salary = 70000;
+    } else {
+      return res.status(400).json({ error: 'Invalid role' });
     }
     // Create the guardian account
     const staff = await Staff.create({
@@ -37,10 +35,6 @@ async function createStaff(req, res) {
 // Controller function to delete a staff account
 async function deleteStaff(req, res) {
   try {
-    /*if (req.user.role !== 'admin' && req.user.role !== 'secretary') {
-      return res.status(403).json({ error: 'Unauthorized access' });
-    }*/
-
     const { id } = req.params;
 
     const deletedStaff = await Staff.destroy({ where: { staff_id: id } });
@@ -58,10 +52,6 @@ async function deleteStaff(req, res) {
 
 async function editStaff(req, res) {
   try {
-    /*if (req.user.role !== 'admin' && req.user.role !== 'secretary') {
-      return res.status(403).json({ error: 'Unauthorized access' });
-    }*/
-
     const { id } = req.params;
     const {
       firstname,

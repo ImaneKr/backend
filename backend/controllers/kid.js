@@ -32,7 +32,7 @@ async function createKidProfile(req, res) {
             allergies: allergies,
             hobbies: hobbies,
             profile_pic: profilePic,
-            syndromes: syndromes,
+            syndroms: syndromes,
             authorizedpickups: authorizedpickups,
             category_id: category_id,
             age: age, // Assign the calculated age to the age attribute
@@ -75,7 +75,7 @@ async function editKidProfile(req, res) {
             allergies: allergies,
             hobbies: hobbies,
             authorizedpickups: authorizedpickups,
-            syndromes: syndromes,
+            syndroms: syndromes,
         });
 
         return res.status(200).json(kidProfile);
