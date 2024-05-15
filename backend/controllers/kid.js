@@ -2,7 +2,7 @@ const { Kid, Guardian, Category, Staff } = require('../models/models');
 
 async function createKidProfile(req, res) {
     try {
-        const { guardianId, firstname, lastname, dateOfbirth, gender, allergies, hobbies, profilePic, syndromes, authorizedpickups } = req.body;
+        const { guardianId, firstname, lastname, dateOfbirth, gender, allergies, relationTochild, hobbies, profilePic, syndromes, authorizedpickups } = req.body;
 
         const age = calculateAge(new Date(dateOfbirth));
 
@@ -33,6 +33,7 @@ async function createKidProfile(req, res) {
             hobbies: hobbies,
             profile_pic: profilePic,
             syndroms: syndromes,
+            relationTochild: relationTochild,
             authorizedpickups: authorizedpickups,
             category_id: category_id,
             age: age, // Assign the calculated age to the age attribute

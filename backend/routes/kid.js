@@ -7,6 +7,8 @@ const {
     getAllKidProfiles,
     getKidProfileById,
     getKidsByGuardianId } = require('../controllers/kid');
+const { verifyToken, verifyAdminOrSecretary } = require('../middlewares/verifyToken');
+
 
 router.post('/', createKidProfile);
 router.put('/:id', editKidProfile);

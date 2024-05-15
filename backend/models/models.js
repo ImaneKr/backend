@@ -102,6 +102,9 @@ const Kid = sequelize.define('Kid', {
   allergies: {
     type: DataTypes.JSON
   },
+  realtionTochild: {
+    type: DataTypes.STRING(100)
+  },
   hobbies: {
     type: DataTypes.JSON
   },
