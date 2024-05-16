@@ -63,12 +63,27 @@ async function editKidProfile(req, res) {
     try {
         const { id } = req.params;
         const { firstname, lastname, gender, relationTochild, dateOfbirth, allergies, hobbies, authorizedpickups, syndromes } = req.body;
-
+        const age = calculateAge(new Date(dateOfbirth));
         let kidProfile = await Kid.findByPk(id);
         if (!kidProfile) {
             return res.status(404).json({ error: 'KidProfile not found' });
         }
-
+        let category_id;
+        if (age < 3) {
+            const categoryB = await Category.findOne({ where: { category_name: 'B' } });
+            if (categoryB) {
+                category_id = categoryB.category_id;
+            } else {
+                return res.status(500).json({ error: 'Category B not found' });
+            }
+        } else {
+            const categoryA = await Category.findOne({ where: { category_name: 'A' } });
+            if (categoryA) {
+                category_id = categoryA.category_id;
+            } else {
+                return res.status(500).json({ error: 'Category A not found' });
+            }
+        }
         kidProfile = await kidProfile.update({
             firstname: firstname,
             lastname: lastname,
@@ -78,6 +93,8 @@ async function editKidProfile(req, res) {
             hobbies: hobbies,
             authorizedpickups: authorizedpickups,
             relationTochild: relationTochild,
+            category_id: category_id,
+            age: age,
             syndroms: syndromes,
         });
 
