@@ -9,14 +9,14 @@ const {
 } = require('../controllers/event');
 const { verifyToken, verifyAdminOrSecretary } = require('../middlewares/verifyToken');
 
-router.post('/',verifyToken, verifyAdminOrSecretary, createEvent);
+router.post('/', createEvent);
 
-router.put('/:event_id', verifyToken, verifyAdminOrSecretary,editEvent);
+router.put('/:event_id', editEvent);
 
-router.delete('/:event_id', verifyToken, verifyAdminOrSecretary,deleteEvent);
+router.delete('/:event_id', deleteEvent);
 
-router.get('/', verifyToken, verifyAdminOrSecretary,getAllEvents);
+router.get('/', getAllEvents);
 
-router.post('/:eventId/list',verifyToken, verifyAdminOrSecretary, createEventListEntry);
+router.post('/:eventId/list', createEventListEntry);
 
 module.exports = router;

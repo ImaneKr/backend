@@ -1,23 +1,11 @@
-const { Guardian, Staff } = require('../models/models'); // Import the Guardian model
+const { Guardian, Staff } = require('../models/models');
+const upload = require('../middlewares/multerConfig')
+
 
 async function createGuardian(req, res) {
     try {
-        // Check if the user creating the account is a secretary or admin
-        /*  const { role } = req.Staff; // Assuming user's role is stored in req.user.role
-          if (role !== 'secretary' && role !== 'admin') {
-              return res.status(403).json({ error: 'Unauthorized' });
-          }*/
-
-        const { firstname,
-            lastname,
-            gender,
-            username,
-            guardian_pwd,
-            civilState,
-            email,
-            phone_number,
-            address,
-            acc_pic } = req.body;
+        const { firstname, lastname, gender, username, guardian_pwd, civilState, email, phone_number, address, acc_pic } = req.body;
+        // Access the uploaded file
 
         const guardian = await Guardian.create({
             firstname,
@@ -29,10 +17,9 @@ async function createGuardian(req, res) {
             email,
             phone_number,
             address,
-            acc_pic,
-            acc_active: true
+            acc_pic: acc_pic ? acc_pic.path : '' // Store the file path in the database
         });
-        console.log(guardian.guardian_pwd);
+
         return res.status(201).json(guardian);
     } catch (error) {
         console.error('Error creating guardian:', error);
@@ -43,7 +30,8 @@ async function createGuardian(req, res) {
 async function editGuardian(req, res) {
     try {
         const { guardian_id } = req.params;
-        const { firstname, lastname, gender, username, guardian_pwd, civilstate, email, phone_number, address, acc_pic } = req.body;
+        const { firstname, lastname, gender, username, guardian_pwd, civilstate, email, phone_number, address } = req.body;
+        const acc_pic = req.file;
         let guardian = await Guardian.findByPk(guardian_id);
         if (!guardian) {
             return res.status(404).json({ error: 'Guardian not found' });

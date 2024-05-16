@@ -11,14 +11,14 @@ const { verifyToken, verifyAdminOrSecretary } = require('../middlewares/verifyTo
 
 
 // Create a new Guardian
-router.post('/', verifyToken, verifyAdminOrSecretary,createGuardian);
-router.put('/:id',verifyToken, verifyAdminOrSecretary, editGuardian);
-router.get('/',verifyToken, verifyAdminOrSecretary, getAllGuardians);
-router.get('/:id',verifyToken, verifyAdminOrSecretary, getGuardianById);
+router.post('/', createGuardian);
+router.put('/:id', editGuardian);
+router.get('/', getAllGuardians);
+router.get('/:id', getGuardianById);
 
 // Get a Guardian by ID
 
 // Delete a Guardian
-router.delete('/:guardian_id',verifyToken, verifyAdminOrSecretary, deleteGuardian);
+router.delete('/:guardian_id', deleteGuardian);
 
 module.exports = router;

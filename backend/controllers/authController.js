@@ -52,11 +52,11 @@ const staffLogin = async (req, res, next) => {
     if (staff_pwd !== staff.staff_pwd) {
       return next(createError(401, "Username or password incorrect!"));
     }
-
     // Generate and return a token
     const token = await generateToken(staff);
     res.cookie('token', token, { httpOnly: true, maxAge: 3600000 });
-    res.json({ token, message: 'Login successful' });
+    res.json({ token, staff, message: 'Login successful' });
+
 
   } catch (error) {
     console.error('Error logging for Staff:', error);

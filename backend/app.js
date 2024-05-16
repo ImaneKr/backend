@@ -18,7 +18,7 @@ const evaluatioRouter = require('./routes/evaluation');*/
 // Initialize Express app
 const app = express();
 app.use(cors({
-    origin: ['http://localhost:25298', 'http://localhost:3000'],
+    origin: ['http://localhost:25298', 'http://localhost:3000', 'https://mykiddonest-web.vercel.app'],
     credentials: true // If you're using cookies or authorization headers
 }));
 
