@@ -62,7 +62,7 @@ function calculateAge(birthDate) {
 async function editKidProfile(req, res) {
     try {
         const { id } = req.params;
-        const { firstname, lastname, dateOfbirth, allergies, hobbies, authorizedpickups, syndromes } = req.body;
+        const { firstname, lastname, gender, relationTochild, dateOfbirth, allergies, hobbies, authorizedpickups, syndromes } = req.body;
 
         let kidProfile = await Kid.findByPk(id);
         if (!kidProfile) {
@@ -73,9 +73,11 @@ async function editKidProfile(req, res) {
             firstname: firstname,
             lastname: lastname,
             dateOfbirth: dateOfbirth,
+            gender: gender,
             allergies: allergies,
             hobbies: hobbies,
             authorizedpickups: authorizedpickups,
+            relationTochild: relationTochild,
             syndroms: syndromes,
         });
 
