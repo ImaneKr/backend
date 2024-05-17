@@ -4,9 +4,7 @@ const { createStaff, deleteStaff, editStaff, getAllStaff, getStaffById } = requi
 const { verifyAdmin, verifyToken } = require('../middlewares/verifyToken')
 
 router.post('/', createStaff);
-
 router.put('/:staff_id', editStaff);
-
 router.delete('/:id', deleteStaff);
 router.get('/', getAllStaff);
 router.get('/:staff_id', getStaffById);

@@ -12,6 +12,7 @@ const timetableRouter = require('./routes/timeTable');
 const announcementRouter = require('./routes/announcement');
 const categoryRouter = require('./routes/category');
 const lunchMenuRouter = require('./routes/lunchmenu');
+const eventListRouter = require('./routes/eventList');
 /*const paymentRouter = require('./routes/payment');
 const evaluatioRouter = require('./routes/evaluation');*/
 
@@ -40,6 +41,7 @@ app.use('/announcement', announcementRouter);
 app.use('/timetable', timetableRouter);
 app.use('/category', categoryRouter);
 app.use('/lunchmenu', lunchMenuRouter);
+app.use('/eventlist',eventListRouter);
 /*app.use('/payment', paymentRouter);
 app.use('/evaluation', evaluatioRouter);*/
 

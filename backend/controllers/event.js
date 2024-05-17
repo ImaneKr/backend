@@ -1,4 +1,4 @@
-const { Event, EventList, Staff } = require('../models/models');
+const { Event, EventList, Kid, Staff } = require('../models/models');
 
 const createEvent = async (req, res) => {
   let event_desc = "abc"
@@ -14,7 +14,7 @@ const createEvent = async (req, res) => {
       event_date: event_date,
       event_image: event_image,
       event_desc: event_desc,
-      published: isFutureEvent // Set published to true if the event date is in the future
+      published: isFutureEvent
     });
 
     res.status(201).json(event);
@@ -29,7 +29,8 @@ const editEvent = async (req, res) => {
   try {
     let event_desc = "abc"
     const { event_id, event_name, event_date, event_image, published } = req.body;
-
+    const currentDate = new Date();
+    const isFutureEvent = new Date(event_date) > currentDate;
     let event = await Event.findByPk(event_id);
 
     if (!event) {
@@ -40,7 +41,7 @@ const editEvent = async (req, res) => {
     event.event_desc = event_desc;
     event.event_date = event_date;
     event.event_image = event_image;
-    event.published = published;
+    event.published = isFutureEvent;
 
     await event.save();
 
@@ -82,11 +83,38 @@ const getAllEvents = async (req, res) => {
   }
 };
 
+
+const getPublishedEvents = async (req, res) => {
+  try {
+    const currentDate = new Date();
+    // Find all published events
+    const events = await Event.findAll({
+      where: {
+        published: true
+      }
+    });
+
+    // Check if event dates have passed and update published status accordingly
+    for (let event of events) {
+      if (new Date(event.event_date) <= currentDate) {
+        event.published = false;
+        await event.save();
+      }
+    }
+
+    // Filter out unpublished events
+    const publishedEvents = events.filter(event => event.published);
+
+    res.status(200).json(publishedEvents);
+  } catch (error) {
+    console.error('Error fetching published events:', error);
+    res.status(500).json({ error: 'Failed to fetch published events' });
+  }
+};
+
+
 const createEventListEntry = async (req, res) => {
   try {
-    /* if (req.Staff.role !== 'admin' && req.Staff.role !== 'secretary') {
-       return res.status(403).json({ error: 'Unauthorized access' });
-     }*/
 
     const { eventId } = req.params;
     const { accept, decline } = req.body;
@@ -117,5 +145,6 @@ module.exports = {
   editEvent,
   deleteEvent,
   getAllEvents,
-  createEventListEntry
+  createEventListEntry,
+  getPublishedEvents
 };
