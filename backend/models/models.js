@@ -308,6 +308,14 @@ const Payment = sequelize.define('Payment', {
    checkoutId: {
     type: DataTypes.INTEGER,
     allowNull: true 
+  },
+  guardian_id: {  // Foreign key added
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'Guardian',
+      key: 'guardian_id'
+    }
   }
 }, {
   tableName: 'Payment'

@@ -34,9 +34,13 @@ async function createCustomer (req, res){
     const response = await axios.post('https://pay.chargily.net/test/api/v2/customers', options.data, {
       headers: options.headers
     });
+    const customerData = response.data;
+    const customerId = customerData.id;
 
     res.json(response.data);
     // TODO WE NEED THE ID OF THE CUSTOMER TO CREATE A CHECKOUT
+    
+
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Internal server error' });
@@ -47,7 +51,7 @@ async function createCheckout(req, res) {
 
   // payment_method can be either : edahabia or cib
 
-  const { amount,payment_method, guardian_id } = req.body;
+  const { amount, guardian_id ,customerId} = req.body;
 
   const options = {
     method: 'POST',
@@ -55,7 +59,7 @@ async function createCheckout(req, res) {
       Authorization: `Bearer ${process.env.CHARGILY_SECRET_KEY}`,
       'Content-Type': 'application/json'
     },
-    // WE NEED CUSTOMER ID WEBHOOK URL failire url and success url PAYMENT METHOD ENUM BETWEEN EDDAHABIA AND CIB
+    // WE NEED CUSTOMER ID WEBHOOK URL failire url and success url PAYMENT METHOD ENUM BETWEEN EDAHABIA AND CIB
 
     // we need to expose this server to ngrok so we can use it for the webhook
     // after posting this we get a response something like this : 
@@ -99,8 +103,8 @@ async function createCheckout(req, res) {
       currency: "dzd",
       success_url: 'https://app.com/payments/success',
       failure_url: 'https://app.com/payments/success',
-      customer_id: null,
-      webhook_endpoint: null,
+      customer_id: customerId,
+      webhook_endpoint: 'https://upward-native-eft.ngrok-free.app/payment/webhook',
     })
   };
 
@@ -109,13 +113,13 @@ async function createCheckout(req, res) {
       headers: options.headers
     });
 
-    const { id: checkoutId } = response.data;
+    const { id: checkoutId, status} = response.data;
 
-    // Create a new payment record in the database
+    // Create a new payment record in the DB
     await Payment.create({
       payment_date: new Date(),
       amount: amount,
-      status: 'unpaid',
+      status: status,
       checkoutId: checkoutId,
       guardian_id: guardian_id
     });
