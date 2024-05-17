@@ -294,7 +294,10 @@ const Payment = sequelize.define('Payment', {
     primaryKey: true,
     autoIncrement: true
   },
-  payment_date: {
+  created_at: {
+    type: DataTypes.DATE
+  },
+  updated_at: {
     type: DataTypes.DATE
   },
   amount: {
@@ -302,11 +305,15 @@ const Payment = sequelize.define('Payment', {
     allowNull: false
   },
   status: {
-    type: DataTypes.ENUM('paid', 'unpaid', 'failed', 'expired'),
+    type: DataTypes.STRING(50),
     allowNull: false
   },
    checkoutId: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING(50),
+    allowNull: true 
+  },
+   customerId: {
+    type: DataTypes.STRING(50),
     allowNull: true 
   },
   guardian_id: {  // Foreign key added
@@ -318,7 +325,8 @@ const Payment = sequelize.define('Payment', {
     }
   }
 }, {
-  tableName: 'Payment'
+  tableName: 'Payment',
+  timestamps: false
 });
 const Timetable = sequelize.define('Timetable', {
   id: {
