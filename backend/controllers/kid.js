@@ -141,7 +141,7 @@ async function getAllKidProfiles(req, res) {
             ],
         });
 
-        return res.status(200).json(allKidProfiles);
+        return res.status(200).json(allKidProfiles );
     } catch (error) {
         console.error('Error fetching all kid profiles:', error);
         return res.status(500).json({ error: 'Internal server error' });

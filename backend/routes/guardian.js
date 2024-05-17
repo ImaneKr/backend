@@ -12,7 +12,7 @@ const { verifyToken, verifyAdminOrSecretary } = require('../middlewares/verifyTo
 
 // Create a new Guardian
 router.post('/', createGuardian);
-router.put('/:id', editGuardian);
+router.put('/:guardian_id', editGuardian);
 router.get('/', getAllGuardians);
 router.get('/:id', getGuardianById);
 

@@ -30,8 +30,7 @@ async function createGuardian(req, res) {
 async function editGuardian(req, res) {
     try {
         const { guardian_id } = req.params;
-        const { firstname, lastname, gender, username, guardian_pwd, civilstate, email, phone_number, address } = req.body;
-        const acc_pic = req.file;
+        const { firstname, lastname, gender, username, guardian_pwd, civilstate, email, phone_number, address, acc_pic } = req.body;
         let guardian = await Guardian.findByPk(guardian_id);
         if (!guardian) {
             return res.status(404).json({ error: 'Guardian not found' });

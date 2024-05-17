@@ -2,9 +2,9 @@ const { Category } = require('../models/models');
 
 const getCategoryById = async (req, res) => {
     try {
-        const categoryId = req.params.id;
+        const id = req.params.id;
         const category = await Category.findOne({
-            where: { category_id: categoryId },
+            where: { category_id: id },
             attributes: ['category_name', 'category_desc', 'category_id']
         });
         if (!category) {

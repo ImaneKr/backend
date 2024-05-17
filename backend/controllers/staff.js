@@ -7,9 +7,9 @@ async function createStaff(req, res) {
     const { firstname, lastname, username, role, staff_pic, phone_number, email, staff_pwd } = req.body;
     if (role == 'teacher') {
       salary = 50000;
-    } else if(role == 'secretary') {
+    } else if (role == 'secretary') {
       salary = 45000;
-    }else if (role === 'admin') {
+    } else if (role === 'admin') {
       salary = 70000;
     } else {
       return res.status(400).json({ error: 'Invalid role' });
@@ -32,6 +32,19 @@ async function createStaff(req, res) {
     return res.status(500).json({ error: 'Failed to create staff account' });
   }
 }
+async function getStaffById(req, res) {
+  try {
+    const { staff_id } = req.params;
+    const staff = await Staff.findByPk(staff_id);
+    if (!staff) {
+      return res.status(404).json({ error: 'Staff not found' });
+    }
+    return res.status(200).json(staff);
+  } catch (error) {
+    console.error('Error fetching staff by ID:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+}
 // Controller function to delete a staff account
 async function deleteStaff(req, res) {
   try {
@@ -52,7 +65,7 @@ async function deleteStaff(req, res) {
 
 async function editStaff(req, res) {
   try {
-    const { id } = req.params;
+    const { staff_id } = req.params;
     const {
       firstname,
       lastname,
@@ -77,7 +90,7 @@ async function editStaff(req, res) {
         salary,
         staff_pwd
       },
-      { where: { staff_id: id } }
+      { where: { staff_id: staff_id } }
     );
 
     if (updated === 0) {
@@ -111,5 +124,6 @@ module.exports = {
   createStaff,
   deleteStaff,
   editStaff,
-  getAllStaff
+  getAllStaff,
+  getStaffById
 };
