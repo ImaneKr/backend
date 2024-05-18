@@ -150,6 +150,12 @@ Kid.belongsTo(Category, {
   foreignKey: 'category_id',
   as: 'category'
 });
+Kid.associate = (models) => {
+  Kid.hasMany(models.Evaluation, {
+    foreignKey: 'kid_id',
+    onDelete: 'CASCADE'
+  });
+};
 const Staff = sequelize.define('Staff', {
   staff_id: {
     type: DataTypes.INTEGER,
@@ -386,7 +392,7 @@ const Evaluation = sequelize.define('Evaluation', {
     allowNull: false
   }
 }, {
-  tableName: 'Evaluations',
+  tableName: 'Evaluation',
   timestamps: false
 });
 
