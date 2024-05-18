@@ -36,20 +36,8 @@ const acceptEvent = async (req, res) => {
         const eventId = req.params.eventId;
         const kidId = req.body.kidId;
 
-        // Check if the event invitation exists for the kid
-        const eventInvitation = await EventList.findOne({
-            where: {
-                EventId: eventId,
-                KidId: kidId
-            }
-        });
-
-        if (!eventInvitation) {
-            return res.status(404).json({ error: 'Event invitation not found' });
-        }
-
         // Update the acceptance status to true
-        await eventInvitation.update({ accept: true });
+        await EventList.create({ EventId: eventId, KidId: kidId, accept: true });
 
         res.status(200).json({ message: 'Event invitation accepted successfully' });
     } catch (error) {

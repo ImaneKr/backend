@@ -13,8 +13,8 @@ const announcementRouter = require('./routes/announcement');
 const categoryRouter = require('./routes/category');
 const lunchMenuRouter = require('./routes/lunchmenu');
 const eventListRouter = require('./routes/eventList');
-/*const paymentRouter = require('./routes/payment');
-const evaluatioRouter = require('./routes/evaluation');*/
+/*const paymentRouter = require('./routes/payment');*/
+const evaluatioRouter = require('./routes/evaluations');
 
 // Initialize Express app
 const app = express();
@@ -39,8 +39,8 @@ app.use('/timetable', timetableRouter);
 app.use('/category', categoryRouter);
 app.use('/lunchmenu', lunchMenuRouter);
 app.use('/eventlist', eventListRouter);
-/*app.use('/payment', paymentRouter);
-app.use('/evaluation', evaluatioRouter);*/
+/*app.use('/payment', paymentRouter);*/
+app.use('/evaluation', evaluatioRouter);
 
 
 async function startServer() {

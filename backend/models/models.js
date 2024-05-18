@@ -456,6 +456,13 @@ const Subject = sequelize.define('Subject', {
   tableName: 'Subject',
   timestamps: false
 });
+
+Subject.associate = (models) => {
+  Subject.hasMany(models.Evaluation, {
+      foreignKey: 'subject_id',
+      onDelete: 'CASCADE'
+  });
+}
 const LunchMenu = sequelize.define('LunchMenu', {
   menu_id: {
     type: DataTypes.INTEGER,

@@ -1,5 +1,5 @@
 const { Kid, Guardian, Category, Staff } = require('../models/models');
-
+const { addKidMarks } = require('./evaluation')
 async function createKidProfile(req, res) {
     try {
         const { guardianId, firstname, lastname, dateOfbirth, gender, allergies, relationTochild, hobbies, profilePic, syndromes, authorizedpickups } = req.body;
@@ -141,7 +141,7 @@ async function getAllKidProfiles(req, res) {
             ],
         });
 
-        return res.status(200).json(allKidProfiles );
+        return res.status(200).json(allKidProfiles);
     } catch (error) {
         console.error('Error fetching all kid profiles:', error);
         return res.status(500).json({ error: 'Internal server error' });
