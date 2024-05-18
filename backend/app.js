@@ -31,7 +31,7 @@ app.use(cookieParser());
 // Define routes
 app.use('/guardian', guardianRouter);
 app.use('/staff', staffRoute);
-app.use('/login', authRoute);
+app.use('/auth', authRoute);
 app.use('/create', dummyRoute);
 app.use('/kid', kidRouter);
 app.use('/event', eventRouter);
