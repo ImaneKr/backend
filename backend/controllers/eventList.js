@@ -37,7 +37,7 @@ const acceptEvent = async (req, res) => {
         const kidId = req.body.kidId;
 
         // Update the acceptance status to true
-        await EventList.create({ EventId: eventId, KidId: kidId, accept: true });
+        await EventList.create({ EventId: eventId, KidId: kidId, accept: true ,decline:false });
 
         res.status(200).json({ message: 'Event invitation accepted successfully' });
     } catch (error) {
@@ -51,20 +51,8 @@ const declineEvent = async (req, res) => {
         const eventId = req.params.eventId;
         const kidId = req.body.kidId;
 
-        // Check if the event invitation exists for the kid
-        const eventInvitation = await EventList.findOne({
-            where: {
-                EventId: eventId,
-                KidId: kidId
-            }
-        });
-
-        if (!eventInvitation) {
-            return res.status(404).json({ error: 'Event invitation not found' });
-        }
-
         // Update the decline status to true
-        await eventInvitation.update({ decline: true });
+        await EventList.create({ EventId: eventId, KidId: kidId, accept : false,decline: true });
 
         res.status(200).json({ message: 'Event invitation declined successfully' });
     } catch (error) {
