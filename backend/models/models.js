@@ -78,6 +78,7 @@ const Guardian = sequelize.define('Guardian', {
   timestamps: false
 },);
 
+
 const Kid = sequelize.define('Kid', {
   kid_id: {
     type: DataTypes.INTEGER,
@@ -309,31 +310,39 @@ const Payment = sequelize.define('Payment', {
     primaryKey: true,
     autoIncrement: true
   },
-  payment_date: {
+  created_at: {
     type: DataTypes.DATE
   },
-  guardian_id: {
-    type: DataTypes.INTEGER,
-    allowNull: false // Assuming a payment must be associated with a guardian
-  },
-  kid_id: {
-    type: DataTypes.INTEGER,
-    allowNull: false // Assuming a payment must be associated with a kid
+  updated_at: {
+    type: DataTypes.DATE
   },
   amount: {
     type: DataTypes.STRING(10),
     allowNull: false
   },
   status: {
-    type: DataTypes.ENUM('paid', 'unpaid'),
+    type: DataTypes.STRING(50),
     allowNull: false
+  },
+   checkoutId: {
+    type: DataTypes.STRING(50),
+    allowNull: true 
+  },
+   customerId: {
+    type: DataTypes.STRING(50),
+    allowNull: true 
+  },
+  guardian_id: {  // Foreign key added
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'Guardian',
+      key: 'guardian_id'
+    }
   }
 }, {
-  tableName: 'Payment'
-});
-Payment.belongsTo(Kid, {
-  foreignKey: 'kid_id',
-  onDelete: 'CASCADE'
+  tableName: 'Payment',
+  timestamps: false
 });
 const Timetable = sequelize.define('Timetable', {
   id: {
