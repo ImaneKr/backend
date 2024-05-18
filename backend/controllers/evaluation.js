@@ -8,16 +8,18 @@ const addKidMarks = async (req, res) => {
         // Check if the kid_id exists in the Kid table
         const kidExists = await Kid.findByPk(kid_id);
         if (!kidExists) {
-
             return res.status(404).json({ message: 'Kid not found' });
         }
+
+        // Check if the kid already has evaluation marks
         const existingEvaluations = await Evaluation.findAll({
-            where: { kid_id: kid_id }
+            where: { kid_id }
         });
 
         // If no evaluations exist, add default marks for all subjects
         if (existingEvaluations.length === 0) {
-            await addKidMarks(kid_id);
+            // Call the function to add default marks
+            await addDefaultMarks(kid_id);
         }
 
         return res.status(200).json(kidExists);
@@ -26,7 +28,25 @@ const addKidMarks = async (req, res) => {
         return res.status(500).json({ message: 'Internal server error' });
     }
 }
+const addDefaultMarks = async (kid_id) => {
+    try {
+        // Retrieve all subjects
+        const subjects = await Subject.findAll();
 
+        // Create default evaluation marks for each subject
+        const defaultEvaluations = subjects.map(subject => ({
+            kid_id,
+            subject_id: subject.subject_id,
+            mark: 0
+        }));
+
+        // Bulk create the default evaluation marks
+        await Evaluation.bulkCreate(defaultEvaluations);
+    } catch (error) {
+        console.error('Error adding default marks:', error);
+        throw error; // Propagate the error back to the caller
+    }
+}
 
 const getAllSubjectMarksForKid = async (req, res) => {
     const { kid_id } = req.params;
