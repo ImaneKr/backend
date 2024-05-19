@@ -37,7 +37,7 @@ const acceptEvent = async (req, res) => {
         const kidId = req.body.kidId;
 
         // Update the acceptance status to true
-        await EventList.create({ EventId: eventId, KidId: kidId, accept: true ,decline:false });
+        await EventList.create({ EventId: eventId, KidId: kidId, accept: true, decline: false });
 
         res.status(200).json({ message: 'Event invitation accepted successfully' });
     } catch (error) {
@@ -52,7 +52,7 @@ const declineEvent = async (req, res) => {
         const kidId = req.body.kidId;
 
         // Update the decline status to true
-        await EventList.create({ EventId: eventId, KidId: kidId, accept : false,decline: true });
+        await EventList.create({ EventId: eventId, KidId: kidId, accept: false, decline: true });
 
         res.status(200).json({ message: 'Event invitation declined successfully' });
     } catch (error) {

@@ -271,7 +271,7 @@ const EventList = sequelize.define('EventList', {
   tableName: 'EventList',
   timestamps: false
 });
-
+Kid.belongsTo(EventList);
 
 const Announcement = sequelize.define('Announcement', {
   announcement_id: {
@@ -351,7 +351,7 @@ const Timetable = sequelize.define('Timetable', {
   },
   subject_name: {
     type: DataTypes.STRING(255),
-    
+
   },
   day_of_week: {
     type: DataTypes.ENUM('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'),
