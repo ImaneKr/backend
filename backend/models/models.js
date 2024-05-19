@@ -351,7 +351,7 @@ const Timetable = sequelize.define('Timetable', {
   },
   subject_name: {
     type: DataTypes.STRING(255),
-    allowNull: false
+    
   },
   day_of_week: {
     type: DataTypes.ENUM('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'),

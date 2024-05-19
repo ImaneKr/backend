@@ -39,30 +39,52 @@ const addTimetableEntry = async (req, res) => {
 };
 
 const editTimetableEntry = async (req, res) => {
-  const { id } = req.params;
-  const { subject_name, day_of_week, start_time, end_time, duration } = req.body;
+  const { entries } = req.body;  // Expecting an array of timetable entries
 
   try {
-    const entry = await Timetable.findByPk(id);
+    const updatePromises = entries.map(async (entry) => {
+      const { category_id, day_of_week, start_time, subject_name, end_time, duration } = entry;
 
-    if (!entry) {
-      return res.status(404).json({ message: 'Timetable entry not found' });
-    }
+      // Find the existing timetable entry by category_id, day_of_week, and start_time
+      const existingEntry = await Timetable.findOne({
+        where: {
+          category_id,
+          day_of_week,
+          start_time
+        }
+      });
 
-    entry.subject_name = subject_name;
-    entry.day_of_week = day_of_week;
-    entry.start_time = start_time;
-    entry.end_time = end_time;
-    entry.duration = duration;
+      if (existingEntry) {
+        // Update the existing entry
+        existingEntry.subject_name = subject_name;
+        existingEntry.end_time = end_time;
+        existingEntry.duration = duration;
 
-    await entry.save();
+        // Save the changes
+        await existingEntry.save();
+      } else {
+        // If no existing entry is found, create a new one
+        await Timetable.create({
+          category_id,
+          day_of_week,
+          start_time,
+          subject_name,
+          end_time,
+          duration
+        });
+      }
+    });
 
-    res.status(200).json(entry);
+    // Wait for all update/create operations to complete
+    await Promise.all(updatePromises);
+
+    res.status(200).json({ message: 'Timetable entries updated successfully' });
   } catch (error) {
-    console.error('Error editing timetable entry:', error);
+    console.error('Error updating timetable entries:', error);
     res.status(500).json({ message: 'An error occurred' });
   }
 };
+
 const deleteTimetableEntry = async (req, res) => {
   const { id } = req.params;
 
