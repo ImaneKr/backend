@@ -61,7 +61,13 @@ const getAllSubjectMarksForKid = async (req, res) => {
 
         // Check if the kid_id has entries in the Evaluation table
         const existingEvaluations = await Evaluation.findAll({
-            where: { kid_id }
+            where: { kid_id },
+            include: [
+                {
+                    model: Subject,
+                    attributes: ['subject_name'] // Include the subject name
+                }
+            ]
         });
 
 

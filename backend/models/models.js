@@ -396,16 +396,9 @@ const Evaluation = sequelize.define('Evaluation', {
   timestamps: false
 });
 
-Evaluation.associate = (models) => {
-  Evaluation.belongsTo(models.Kid, {
-    foreignKey: 'kid_id',
-    onDelete: 'CASCADE'
-  });
-  Evaluation.belongsTo(models.Subject, {
-    foreignKey: 'subject_id',
-    onDelete: 'CASCADE'
-  });
-};
+
+
+
 const AppSetting = sequelize.define('AppSetting', {
   setting_id: {
     type: DataTypes.INTEGER,
@@ -457,12 +450,10 @@ const Subject = sequelize.define('Subject', {
   timestamps: false
 });
 
-Subject.associate = (models) => {
-  Subject.hasMany(models.Evaluation, {
-      foreignKey: 'subject_id',
-      onDelete: 'CASCADE'
-  });
-}
+
+
+
+
 const LunchMenu = sequelize.define('LunchMenu', {
   menu_id: {
     type: DataTypes.INTEGER,
@@ -504,6 +495,19 @@ const LunchMenu = sequelize.define('LunchMenu', {
 }, {
   tableName: 'LunchMenu',
   timestamps: false
+});
+///association
+Subject.hasMany(Evaluation, {
+  foreignKey: 'subject_id',
+  onDelete: 'CASCADE'
+});
+Evaluation.belongsTo(Kid, {
+  foreignKey: 'kid_id',
+  onDelete: 'CASCADE'
+});
+Evaluation.belongsTo(Subject, {
+  foreignKey: 'subject_id',
+  onDelete: 'CASCADE'
 });
 
 module.exports = {

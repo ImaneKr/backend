@@ -8,7 +8,7 @@ const createTimetableEntry = async (req, res) => {
 
     // Create timetable entry in the database
     const timetableEntry = await Timetable.create({
-      category_id: '',
+      category_id,
       subject_name,
       day_of_week,
       start_time,
