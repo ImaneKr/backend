@@ -46,15 +46,17 @@ async function createCustomer(req, res) {
 }
 // CREATE A CHECKOUT
 async function createCheckout(req, res) {
-  const { amount, guardian_id, customerId } = req.body;
-
+  const { amount, guardian_id, customerId, kid_id } = req.body;
+  console.log('-----------------');
+  console.log(customerId);
+  console.log('-----------------');
   const options = {
     method: "POST",
     headers: {
       Authorization: `Bearer ${process.env.CHARGILY_SECRET_KEY}`,
       "Content-Type": "application/json",
     },
-
+    
     data: JSON.stringify({
       amount: amount,
       currency: "dzd",
@@ -66,6 +68,7 @@ async function createCheckout(req, res) {
     }),
   };
 
+
   try {
     const response = await axios.post(
       "https://pay.chargily.net/test/api/v2/checkouts",
@@ -76,6 +79,7 @@ async function createCheckout(req, res) {
     );
 
     const { id, customer_id, status } = response.data;
+    console.log("kid_id value:", kid_id);
 
     // Create a new payment record in the DB
     const payment = await Payment.create({
@@ -86,6 +90,7 @@ async function createCheckout(req, res) {
       customerId: customer_id,
       checkoutId: id,
       guardian_id: guardian_id,
+      kid_id: kid_id,
     });
 
     if (payment) {
@@ -235,7 +240,7 @@ async function handleWebhook(req, res) {
 }
 ////////// functions to retreive DATA FOR THE DASHBOARD 
 // Controller function to update payment status and date at the start of each month
-/*
+
 async function updatePaymentStatusAndDate() {
   try {
     // Get the current date
@@ -274,7 +279,7 @@ async function updatePaymentStatusAndDate() {
 
 // Schedule the function to run at the start of each month
 // Assuming you're using a scheduler like node-cron
-const cron = require('node-cron');
+/*const cron = require('node-cron');
 // At 00:00 on the first day of every month
 cron.schedule('0 0 1 * *', () => {
   updatePaymentStatusAndDate();
