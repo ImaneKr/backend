@@ -1,13 +1,28 @@
-const Timetable = require('../models/models');
+const { Timetable } = require('../models/models');
+
+
+const fetchTimetables = async (req, res) => {
+  const { category_id } = req.params;
+
+  try {
+    const timetables = await Timetable.findAll({
+      where: { category_id },
+      order: [['day_of_week', 'ASC'], ['start_time', 'ASC']]
+    });
+
+    res.status(200).json(timetables);
+  } catch (error) {
+    console.error('Error fetching timetables:', error);
+    res.status(500).json({ message: 'An error occurred' });
+  }
+};
 
 // Controller function to create a new timetable entry
-const createTimetableEntry = async (req, res) => {
-  try {
-    
-    const { category_id, subject_name, day_of_week, start_time, end_time, duration } = req.body;
+const addTimetableEntry = async (req, res) => {
+  const { category_id, subject_name, day_of_week, start_time, end_time, duration } = req.body;
 
-    // Create timetable entry in the database
-    const timetableEntry = await Timetable.create({
+  try {
+    const newEntry = await Timetable.create({
       category_id,
       subject_name,
       day_of_week,
@@ -16,29 +31,61 @@ const createTimetableEntry = async (req, res) => {
       duration
     });
 
-    // Respond with the created timetable entry object
-    res.status(201).json(timetableEntry);
+    res.status(201).json(newEntry);
   } catch (error) {
-    console.error('Error creating timetable entry:', error);
-    res.status(500).json({ error: 'Failed to create timetable entry' });
+    console.error('Error adding timetable entry:', error);
+    res.status(500).json({ message: 'An error occurred' });
   }
 };
 
-// Controller function to get all timetable entries
-const getAllTimetableEntries = async (req, res) => {
-  try {
-    // Fetch all timetable entries from the database
-    const timetableEntries = await Timetable.findAll();
+const editTimetableEntry = async (req, res) => {
+  const { id } = req.params;
+  const { subject_name, day_of_week, start_time, end_time, duration } = req.body;
 
-    // Respond with the list of timetable entries
-    res.status(200).json(timetableEntries);
+  try {
+    const entry = await Timetable.findByPk(id);
+
+    if (!entry) {
+      return res.status(404).json({ message: 'Timetable entry not found' });
+    }
+
+    entry.subject_name = subject_name;
+    entry.day_of_week = day_of_week;
+    entry.start_time = start_time;
+    entry.end_time = end_time;
+    entry.duration = duration;
+
+    await entry.save();
+
+    res.status(200).json(entry);
   } catch (error) {
-    console.error('Error fetching timetable entries:', error);
-    res.status(500).json({ error: 'Failed to fetch timetable entries' });
+    console.error('Error editing timetable entry:', error);
+    res.status(500).json({ message: 'An error occurred' });
+  }
+};
+const deleteTimetableEntry = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const entry = await Timetable.findByPk(id);
+
+    if (!entry) {
+      return res.status(404).json({ message: 'Timetable entry not found' });
+    }
+
+    await entry.destroy();
+
+    res.status(200).json({ message: 'Timetable entry deleted' });
+  } catch (error) {
+    console.error('Error deleting timetable entry:', error);
+    res.status(500).json({ message: 'An error occurred' });
   }
 };
 
 module.exports = {
-  createTimetableEntry,
-  getAllTimetableEntries
-};
+  fetchTimetables,
+  addTimetableEntry,
+  editTimetableEntry,
+  deleteTimetableEntry
+}
+
