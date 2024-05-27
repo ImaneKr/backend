@@ -45,28 +45,28 @@ app.use('/evaluation', evaluatioRouter);
 
 
 async function startServer() {
-    try {
-      await sequelize.authenticate();
-      console.log("Connection to database has been established successfully.");
-  
-      app.listen(PORT, "0.0.0.0", () =>
-        console.log(`Express server live at http://localhost:${PORT}`)
-      );
-      ngrok
-        .connect({
-          addr: PORT,
-          authtoken: process.env.NGROK_AUTH_TOKEN,
-          domain: process.env.NGROK_DOMAIN,
-        })
-        .then((listener) =>
-          console.log(`Ingress established at: ${listener.url()}`)
-        )
-        .catch((err) => console.log("Error occurred: " + err));
-    } catch (error) {
-      console.error("Error starting server:", error);
-  
-      process.exit(1);
-    }
+  try {
+    await sequelize.authenticate();
+    console.log("Connection to database has been established successfully.");
+
+    app.listen(PORT, "0.0.0.0", () =>
+      console.log(`Express server live at http://localhost:${PORT}`)
+    );
+    ngrok
+      .connect({
+        addr: PORT,
+        authtoken: process.env.NGROK_AUTH_TOKEN,
+        domain: process.env.NGROK_DOMAIN,
+      })
+      .then((listener) =>
+        console.log(`Ingress established at: ${listener.url()}`)
+      )
+      .catch((err) => console.log("Error occurred: " + err));
+  } catch (error) {
+    console.error("Error starting server:", error);
+
+    process.exit(1);
   }
-  
-  startServer();
+}
+
+startServer();
