@@ -271,7 +271,7 @@ const EventList = sequelize.define('EventList', {
   tableName: 'EventList',
   timestamps: false
 });
-Kid.belongsTo(EventList);
+
 
 const Announcement = sequelize.define('Announcement', {
   announcement_id: {
@@ -499,6 +499,10 @@ const LunchMenu = sequelize.define('LunchMenu', {
 ///association
 Subject.hasMany(Evaluation, {
   foreignKey: 'subject_id',
+  onDelete: 'CASCADE'
+});
+EventList.belongsTo(Event, {
+  foreignKey: 'event_id',
   onDelete: 'CASCADE'
 });
 Evaluation.belongsTo(Kid, {
