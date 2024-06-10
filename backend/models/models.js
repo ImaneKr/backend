@@ -249,7 +249,7 @@ const EventList = sequelize.define('EventList', {
     allowNull: false,
     references: {
       model: 'Event',
-      key: 'id'
+      key: 'event_id'
     }
   },
   KidId: {
@@ -257,7 +257,7 @@ const EventList = sequelize.define('EventList', {
     allowNull: false,
     references: {
       model: 'Kid',
-      key: 'id'
+      key: 'kid_id'
     }
   },
   accept: {
