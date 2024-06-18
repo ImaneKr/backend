@@ -125,6 +125,10 @@ const Kid = sequelize.define('Kid', {
   age: {
     type: DataTypes.INTEGER
   },
+  status: {
+    type: DataTypes.ENUM('pending', 'approved', 'rejected'),
+    defaultValue: 'pending'
+  },
   guardian_id: {
     type: DataTypes.INTEGER,
     allowNull: false,
@@ -324,13 +328,13 @@ const Payment = sequelize.define('Payment', {
     type: DataTypes.STRING(50),
     allowNull: false
   },
-   checkoutId: {
+  checkoutId: {
     type: DataTypes.STRING(50),
-    allowNull: true 
+    allowNull: true
   },
-   customerId: {
+  customerId: {
     type: DataTypes.STRING(50),
-    allowNull: true 
+    allowNull: true
   },
   guardian_id: {  // Foreign key added
     type: DataTypes.INTEGER,
@@ -518,14 +522,23 @@ Subject.hasMany(Evaluation, {
   foreignKey: 'subject_id',
   onDelete: 'CASCADE'
 });
-EventList.belongsTo(Event, {
-  foreignKey: 'event_id',
-  onDelete: 'CASCADE'
+Event.belongsToMany(Kid, {
+  through: 'EventList',
+  foreignKey: 'EventId',
+  otherKey: 'KidId'
+});
+
+// In your Kid model
+Kid.belongsToMany(Event, {
+  through: 'EventList',
+  foreignKey: 'kid_id',
+  otherKey: 'EventId'
 });
 Evaluation.belongsTo(Kid, {
   foreignKey: 'kid_id',
   onDelete: 'CASCADE'
 });
+
 Evaluation.belongsTo(Subject, {
   foreignKey: 'subject_id',
   onDelete: 'CASCADE'

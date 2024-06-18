@@ -37,7 +37,7 @@ async function createKidProfile(req, res) {
             authorizedpickups: authorizedpickups,
             category_id: category_id,
             age: age, // Assign the calculated age to the age attribute
-            active: true,
+            status: 'pending',
         });
 
         return res.status(201).json({ ...kidProfile.toJSON(), age: age });
@@ -58,6 +58,7 @@ function calculateAge(birthDate) {
     }
     return age;
 }
+
 
 async function editKidProfile(req, res) {
     try {
@@ -105,6 +106,23 @@ async function editKidProfile(req, res) {
     }
 }
 
+async function approveKid(req,res){
+     try {
+        const {id} = req.params;
+        const kidProfile = await Kid.findByPk(id);
+        if (!kidProfile) {
+            return res.status(404).json({ error: 'KidProfile not found' });
+        }
+        kidProfile = await kidProfile.update({
+            status :'approved'
+        });
+        return res.status(200).json(kidProfile);
+     } catch (error) {
+        console.error('Error approving KidProfile:', error);
+        return res.status(500).json({ error: 'Internal server error' });
+    
+     }
+}
 async function deleteKidProfile(req, res) {
     try {
         const { id } = req.params;
@@ -126,6 +144,9 @@ async function deleteKidProfile(req, res) {
 async function getAllKidProfiles(req, res) {
     try {
         const allKidProfiles = await Kid.findAll({
+            where:{
+            status:'approved'
+            },
             include: [
                 {
                     model: Guardian,
@@ -176,7 +197,8 @@ async function getKidsByGuardianId(req, res) {
 
         const kids = await Kid.findAll({
             where: {
-                guardian_id: guardianId
+                guardian_id: guardianId,
+                status:'approved'
             }
         });
 
@@ -193,5 +215,6 @@ module.exports = {
     deleteKidProfile,
     getAllKidProfiles,
     getKidProfileById,
-    getKidsByGuardianId
+    getKidsByGuardianId,
+    approveKid
 };

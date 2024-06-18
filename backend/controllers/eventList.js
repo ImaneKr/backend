@@ -15,25 +15,17 @@ const getEventAcceptanceList = async (req, res) => {
                 attributes: ['kid_id', 'firstname', 'lastname'] // Include only the id and name of the kid
             }]
         });
-
-        // Extract kid IDs and names from the acceptances
-        const acceptanceList = acceptances.map(acceptance => {
-            return {
-                kid_id: acceptance.Kid.kid_id,
-                firstname: acceptance.Kid.firstname,
-                lastname: acceptance.Kid.lastname
-            };
-        });
-
-        res.status(200).json(acceptanceList);
+      
+        res.status(200).json(acceptances);
     } catch (error) {
         console.error('Error fetching event acceptance list:', error);
         res.status(500).json({ error: 'Failed to fetch event acceptance list' });
     }
 };
+
 const acceptEvent = async (req, res) => {
     try {
-        const eventId = req.params.eventId;
+        const eventId = req.params;
         const kidId = req.body.kidId;
 
         // Update the acceptance status to true
@@ -48,7 +40,7 @@ const acceptEvent = async (req, res) => {
 
 const declineEvent = async (req, res) => {
     try {
-        const eventId = req.params.eventId;
+        const eventId = req.params;
         const kidId = req.body.kidId;
 
         // Update the decline status to true

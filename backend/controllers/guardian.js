@@ -1,18 +1,31 @@
 const { Guardian, Staff } = require('../models/models');
 const upload = require('../middlewares/multerConfig')
+const bcrypt = require('bcrypt')
 
+
+//hashing finction
+const hashPassword = async (plainPassword) => {
+    try {
+      const saltRounds = 10;
+      const hashedPassword = await bcrypt.hash(plainPassword, saltRounds);
+      return hashedPassword;
+    } catch (error) {
+      throw new Error('Error hashing password');
+    }
+  };
 
 async function createGuardian(req, res) {
     try {
         const { firstname, lastname, gender, username, guardian_pwd, civilState, email, phone_number, address, acc_pic } = req.body;
-        // Access the uploaded file
-
+        //hash the password
+        const hashedPassword = await hashPassword(guardian_pwd)
+        
         const guardian = await Guardian.create({
             firstname,
             lastname,
             gender,
             username,
-            guardian_pwd,
+            guardian_pwd:hashedPassword,
             civilState,
             email,
             phone_number,
@@ -35,13 +48,14 @@ async function editGuardian(req, res) {
         if (!guardian) {
             return res.status(404).json({ error: 'Guardian not found' });
         }
-
+        const hashedPassword = await hashPassword(guardian_pwd)
+        
         guardian = await guardian.update({
             firstname: firstname,
             lastname: lastname,
             gender: gender,
             username: username,
-            guardian_pwd: guardian_pwd,
+            guardian_pwd: hashedPassword,
             civilState: civilstate,
             email: email,
             phone_number: phone_number,

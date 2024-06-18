@@ -29,5 +29,8 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/ImaneKr/backend"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.2"
   }
 }

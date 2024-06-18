@@ -1,5 +1,17 @@
 const { Guardian, Staff } = require('../models/models');
+const bcrypt = require('bcrypt')
 const verifyAdmin = require('../middlewares/verifyToken')
+
+
+const hashPassword = async (plainPassword) => {
+  try {
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(plainPassword, saltRounds);
+    return hashedPassword;
+  } catch (error) {
+    throw new Error('Error hashing password');
+  }
+};
 
 async function createStaff(req, res) {
   try {
@@ -14,6 +26,8 @@ async function createStaff(req, res) {
     } else {
       return res.status(400).json({ error: 'Invalid role' });
     }
+    //hash the password 
+    const hashedPassword = await hashPassword(staff_pwd)
     // Create the guardian account
     const staff = await Staff.create({
       firstname: firstname,
@@ -24,7 +38,7 @@ async function createStaff(req, res) {
       phone_number: phone_number,
       email: email,
       salary: salary,
-      staff_pwd: staff_pwd,
+      staff_pwd: hashedPassword,
     });
     return res.status(201).json(staff);
   } catch (error) {
@@ -66,17 +80,9 @@ async function deleteStaff(req, res) {
 async function editStaff(req, res) {
   try {
     const { staff_id } = req.params;
-    const {
-      firstname,
-      lastname,
-      username,
-      role,
-      staff_pic,
-      phone_number,
-      email,
-      salary,
-      staff_pwd
-    } = req.body;
+    const {firstname,lastname,username,role,staff_pic,phone_number,email,salary,staff_pwd} = req.body;
+    // hash the paswword agian 
+    const hashedPassword = await hashPassword(staff_pwd)
 
     const [updated] = await Staff.update(
       {
@@ -88,7 +94,7 @@ async function editStaff(req, res) {
         phone_number,
         email,
         salary,
-        staff_pwd
+        staff_pwd : hashedPassword
       },
       { where: { staff_id: staff_id } }
     );

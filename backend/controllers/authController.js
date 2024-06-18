@@ -1,6 +1,7 @@
 const createError = require('../utils/error');
 const { Guardian, Staff } = require('../models/models');
 const { generateToken } = require('../middlewares/generateToken');
+const bcrypt = require('bcrypt');
 
 // login Render page
 const login_get = (req, res) => {
@@ -19,9 +20,10 @@ const guardianLogin = async (req, res, next) => {
     if (!guardian) {
       return next(createError(400, "Guardian not found!"));
     }
+    //checks the password validation
+    const isPasswordValid = bcrypt.compare(guardian_pwd, guardian.guardian_pwd)
 
-
-    if (guardian_pwd != guardian.guardian_pwd) {
+    if (!isPasswordValid) {
       return next(createError(401, "Username or password incorrect!"));
     }
     else {
@@ -47,9 +49,10 @@ const staffLogin = async (req, res, next) => {
     if (!staff) {
       return next(createError(400, "Staff not found!"));
     }
-
+    // check the password
+    const isPasswordValid = bcrypt.compare(staff_pwd, staff.staff_pwd)
     // Compare passwords directly
-    if (staff_pwd !== staff.staff_pwd) {
+    if (!isPasswordValid) {
       return next(createError(401, "Username or password incorrect!"));
     }
     // Generate and return a token
@@ -66,6 +69,7 @@ const staffLogin = async (req, res, next) => {
 
 
 const logout_get = (req, res) => {
+  res.clearCookie('token');
   res.send("Logged out successfully!");
 };
 
