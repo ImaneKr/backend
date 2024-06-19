@@ -543,6 +543,28 @@ Evaluation.belongsTo(Subject, {
   foreignKey: 'subject_id',
   onDelete: 'CASCADE'
 });
+const Notification = sequelize.define('Notification', {
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
+  },
+  guardian_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  msg: {
+    type: DataTypes.TEXT,
+    allowNull: false,
+  },
+  created_at: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW,
+  }
+}, {
+  timestamps: false,
+  tableName: 'Notifications',
+});
 
 module.exports = {
   Guardian,
@@ -558,7 +580,8 @@ module.exports = {
   AppSetting,
   WebSetting,
   Subject,
-  LunchMenu
+  LunchMenu,
+  Notification
 };
 
 

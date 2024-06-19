@@ -6,14 +6,15 @@ const {
     deleteKidProfile,
     getAllKidProfiles,
     getKidProfileById,
-    getKidsByGuardianId, 
-    approveKid} = require('../controllers/kid');
+    getKidsByGuardianId,
+    approveKid, rejectKid } = require('../controllers/kid');
 const { verifyToken, verifyAdminOrSecretary } = require('../middlewares/verifyToken');
 
 
 router.post('/', createKidProfile);
 router.put('/:id', editKidProfile);
-router.put('/approve/:id',approveKid);
+router.put('/approve/:id', approveKid);
+router.delete('/reject/:id', rejectKid);
 router.delete('/:id', deleteKidProfile);
 router.get('/:id', getKidProfileById);
 router.get('/', getAllKidProfiles);

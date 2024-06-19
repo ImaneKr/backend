@@ -16,7 +16,7 @@ const lunchMenuRouter = require('./routes/lunchmenu');
 const eventListRouter = require('./routes/eventList');
 const paymentRouter = require("./routes/payment");
 const evaluatioRouter = require('./routes/evaluations');
-
+const notifRouter = require('./routes/notification')
 // Initialize Express app
 const app = express();
 app.use(cors());
@@ -42,7 +42,7 @@ app.use('/lunchmenu', lunchMenuRouter);
 app.use('/eventlist', eventListRouter);
 app.use("/payment", paymentRouter);
 app.use('/evaluation', evaluatioRouter);
-
+app.use('/notification',notifRouter);
 
 async function startServer() {
   try {

@@ -1,5 +1,6 @@
 const { Kid, Guardian, Category, Staff } = require('../models/models');
-const { addKidMarks } = require('./evaluation')
+const { addKidMarks } = require('./evaluation');
+const { createNotification } = require('./notification');
 async function createKidProfile(req, res) {
     try {
         const { guardianId, firstname, lastname, dateOfbirth, gender, allergies, relationTochild, hobbies, profilePic, syndromes, authorizedpickups } = req.body;
@@ -106,22 +107,25 @@ async function editKidProfile(req, res) {
     }
 }
 
-async function approveKid(req,res){
-     try {
-        const {id} = req.params;
-        const kidProfile = await Kid.findByPk(id);
+async function approveKid(req, res) {
+    try {
+        const { id } = req.params;
+        let kidProfile = await Kid.findByPk(id);
         if (!kidProfile) {
             return res.status(404).json({ error: 'KidProfile not found' });
         }
         kidProfile = await kidProfile.update({
-            status :'approved'
+            status: 'approved'
         });
+        const guardian_id = kidProfile.guardian_id
+        const msg = "Your child has been accepted to the nursery!!"
+        await createNotification(guardian_id, msg)
         return res.status(200).json(kidProfile);
-     } catch (error) {
+    } catch (error) {
         console.error('Error approving KidProfile:', error);
         return res.status(500).json({ error: 'Internal server error' });
-    
-     }
+
+    }
 }
 async function deleteKidProfile(req, res) {
     try {
@@ -140,12 +144,29 @@ async function deleteKidProfile(req, res) {
         return res.status(500).json({ error: 'Internal server error' });
     }
 }
+async function rejectKid(req, res) {
+    try {
+        const { id } = req.params;
+        const kidProfile = await Kid.findByPk(id);
+        if (!kidProfile) {
+            return res.status(404).json({ error: 'KidProfile not found' });
+        }
+        deleteKidProfile(req, res);
+        const guardian_id = kidProfile.guardian_id
+        const msg = "Your child has been rejected from nursery!!"
+        return res.status(200).json("the child has been rejected");
+    } catch (error) {
+        console.error('Error approving KidProfile:', error);
+        return res.status(500).json({ error: 'Internal server error' });
 
+    }
+}
 async function getAllKidProfiles(req, res) {
+    const { Status } = req.query
     try {
         const allKidProfiles = await Kid.findAll({
-            where:{
-            status:'approved'
+            where: {
+                status: Status
             },
             include: [
                 {
@@ -198,7 +219,7 @@ async function getKidsByGuardianId(req, res) {
         const kids = await Kid.findAll({
             where: {
                 guardian_id: guardianId,
-                status:'approved'
+                status: 'approved'
             }
         });
 
@@ -216,5 +237,6 @@ module.exports = {
     getAllKidProfiles,
     getKidProfileById,
     getKidsByGuardianId,
-    approveKid
+    approveKid,
+    rejectKid
 };
