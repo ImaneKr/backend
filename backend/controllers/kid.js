@@ -154,6 +154,7 @@ async function rejectKid(req, res) {
         deleteKidProfile(req, res);
         const guardian_id = kidProfile.guardian_id
         const msg = "Your child has been rejected from nursery!!"
+        await createNotification(guardian_id, msg)
         return res.status(200).json("the child has been rejected");
     } catch (error) {
         console.error('Error approving KidProfile:', error);
