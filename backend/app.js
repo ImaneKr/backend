@@ -16,17 +16,21 @@ const lunchMenuRouter = require('./routes/lunchmenu');
 const eventListRouter = require('./routes/eventList');
 const paymentRouter = require("./routes/payment");
 const evaluatioRouter = require('./routes/evaluations');
-const notifRouter = require('./routes/notification')
-// Initialize Express app
+const notifRouter = require('./routes/notification');
+const logger = require('./utils/logger'); // Import the logger
+
 const app = express();
 app.use(cors());
 
-
 const PORT = process.env.PORT || 3000;
 
-// Define middleware
 app.use(express.json());
 app.use(cookieParser());
+
+app.use((req, res, next) => {
+  logger.info(`${req.method} ${req.url}`);
+  next();
+});
 
 // Define routes
 app.use('/guardian', guardianRouter);
@@ -42,7 +46,19 @@ app.use('/lunchmenu', lunchMenuRouter);
 app.use('/eventlist', eventListRouter);
 app.use("/payment", paymentRouter);
 app.use('/evaluation', evaluatioRouter);
-app.use('/notification',notifRouter);
+app.use('/notification', notifRouter);
+
+// Not found route
+app.use((req, res) => {
+  logger.warn('Route not found!');
+  res.status(404).json({ message: 'Not found' });
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  logger.error('An error occurred!', err);
+  res.status(err.status || 500).json({ error: err.message });
+});
 
 async function startServer() {
   try {

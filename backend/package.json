@@ -24,7 +24,8 @@
     "nodemon": "^3.1.0",
     "sequelize": "^6.37.3",
     "sequelize-auto": "^0.8.8",
-    "sequelize-cli": "^6.6.2"
+    "sequelize-cli": "^6.6.2",
+    "winston": "^3.13.0"
   },
   "repository": {
     "type": "git",
