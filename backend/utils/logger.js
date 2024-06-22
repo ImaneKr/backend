@@ -12,3 +12,4 @@ const logger = winston.createLogger({
     new winston.transports.File({ filename: 'app.log' }),
   ],
 });
+module.exports = logger;
