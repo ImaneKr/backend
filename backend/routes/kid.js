@@ -7,7 +7,7 @@ const {
     getAllKidProfiles,
     getKidProfileById,
     getKidsByGuardianId,
-    approveKid, rejectKid } = require('../controllers/kid');
+    approveKid, rejectKid , checkKidStatus } = require('../controllers/kid');
 const { verifyToken, verifyAdminOrSecretary } = require('../middlewares/verifyToken');
 
 
@@ -19,5 +19,5 @@ router.delete('/:id', deleteKidProfile);
 router.get('/:id', getKidProfileById);
 router.get('/', getAllKidProfiles);
 router.get('/:guardianId/kids', getKidsByGuardianId);
-
+router.get('/status/:id', checkKidStatus);
 module.exports = router;

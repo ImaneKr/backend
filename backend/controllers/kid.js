@@ -230,7 +230,21 @@ async function getKidsByGuardianId(req, res) {
         return res.status(500).json({ error: 'Internal server error' });
     }
 }
-
+async function checkKidStatus(req, res) {
+    try {
+        const { id } = req.params;
+        const kidProfile = await Kid.findByPk(id, {
+            attributes: ['status'] 
+        });
+        if (!kidProfile) {
+            return res.status(404).json({ error: 'KidProfile not found' });
+        }
+        return res.status(200).json({ status: kidProfile.status });
+    } catch (error) {
+        console.error('Error checking kid status:', error);
+        return res.status(500).json({ error: 'Internal server error' });
+    }
+}
 module.exports = {
     createKidProfile,
     editKidProfile,
@@ -239,5 +253,5 @@ module.exports = {
     getKidProfileById,
     getKidsByGuardianId,
     approveKid,
-    rejectKid
+    rejectKid, checkKidStatus
 };
