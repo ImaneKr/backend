@@ -1,2 +1,8 @@
 {"level":"info","message":"GET /"}
 {"level":"warn","message":"Route not found!"}
+{"level":"info","message":"GET /"}
+{"level":"warn","message":"Route not found!"}
+{"level":"info","message":"GET /"}
+{"level":"warn","message":"Route not found!"}
+{"level":"info","message":"POST /auth/guardian"}
+{"level":"info","message":"POST /auth/guardian"}
